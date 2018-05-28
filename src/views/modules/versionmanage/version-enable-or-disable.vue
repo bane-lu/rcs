@@ -75,6 +75,16 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" type="text/scss" rel="stylesheet/scss" scoped>
+  .el-dialog {
+    position: relative;
+    margin: 0 auto 50px;
+    background: #fff;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 25%!important;
+  }
 </style>

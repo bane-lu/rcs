@@ -3,9 +3,19 @@
  */
 ;(function () {
   window.SITE_CONFIG = {};
-
+  // 获取服务器url
+  function getBasePath(){
+       var curWwwPath = window.document.location.href;
+       var pathName = window.document.location.pathname;
+       var pos = curWwwPath.indexOf(pathName);
+       var localhostPath = curWwwPath.substring(0, pos);
+       var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+       var basePath=localhostPath;
+       return basePath;
+  }
+  var basePath = getBasePath()
   // api接口请求地址
-  window.SITE_CONFIG['baseUrl'] = '//192.168.185.250:9292/web-manager';
+  window.SITE_CONFIG['baseUrl'] = basePath + '/web-manager';
   // window.SITE_CONFIG['baseUrl'] = 'http://localhost:8080/renren-fast';
 
   // cdn地址 = 域名 + 版本号

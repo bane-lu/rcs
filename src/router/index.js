@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
     }).then(({data}) => {
       if (data && data.code === 0) {
         var versionMenu = {
-          icon: 'tickets',
+          icon: 'log',
           list: [],
           menuId: 2,
           name: '版本管理',
@@ -89,7 +89,7 @@ router.beforeEach((to, from, next) => {
           url: 'versionmanage/versionmanage'
         }
         var urlMenu = {
-          icon: 'fa fa-user-secret',
+          icon: 'log',
           list: [],
           menuId: 3,
           name: 'url管理',

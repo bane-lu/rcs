@@ -252,7 +252,6 @@
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            console.log(data)
             this.dataList = data.page.list
             this.totalPage = data.page.totalCount
           } else {
