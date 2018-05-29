@@ -67,7 +67,7 @@ export function isForbiddenChart (s) {
  * @param {*} s
  */
 export function isVersion (s) {
-  return /^([0-9]{1,20})+((.[0-9]{1,20}){2})$/.test(s)
+  return /^([0-9]{1,20})+((.[0-9]{1,20}){2,5})$/.test(s)
 }
 
 /**

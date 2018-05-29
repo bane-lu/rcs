@@ -101,7 +101,8 @@
         header-align="center"
         align="center"
         label="Url"
-        width="250">
+        :show-overflow-tooltip="true"
+        width="270">
       </el-table-column>
       <el-table-column
         prop="system"
