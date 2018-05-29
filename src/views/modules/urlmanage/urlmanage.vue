@@ -79,7 +79,7 @@
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
-        width="120"
+        width="110"
         label="APP">
       </el-table-column>
       <el-table-column

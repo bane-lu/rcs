@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.id ? '新增' : '编辑'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
@@ -142,7 +142,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="on_submit_loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -188,6 +188,7 @@
       }
       return {
         app_type: [],
+        on_submit_loading: false,
         visible: false,
         // 设置日期选择器不可输入文本
         isEditable: false,
@@ -201,7 +202,7 @@
           redFlag: '',
           minTime: '',
           maxTime: '',
-          docFlag: false,
+          docFlag: true,
           docContent: '',
           docRule: '',
           docMinTime: '',
@@ -227,50 +228,50 @@
         docTimeCheck: false,
         dataRule: {
           app: [
-            { required: true, message: 'app不能为空', trigger: 'blur' }
+            { required: true, message: '请选择APP', trigger: 'blur' }
           ],
           urlName: [
-            { required: true, message: 'urlName不能为空', trigger: 'blur' },
+            { required: true, message: '请输入urlName', trigger: 'blur' },
             { validator: validateUrlname, trigger: 'blur' }
           ],
           url: [
-            { required: true, message: 'url地址不能为空', trigger: 'blur' },
+            { required: true, message: '请输入url地址不能为空', trigger: 'blur' },
             { validator: validateUrladdress, trigger: 'blur' }
           ],
           version: [
-            { required: true, message: '版本不能为空', trigger: 'blur' },
+            { required: true, message: '请输入版本号', trigger: 'blur' },
             { validator: validateVersion, trigger: 'blur' }
           ],
           minTime: [
-            { required: true, message: '开始时间不能为空', trigger: 'blur' },
+            { required: true, message: '请选择开始时间', trigger: 'blur' },
             { validator: validateTime, trigger: 'blur' }
           ],
           maxTime: [
-            { required: true, message: '结束时间不能为空', trigger: 'blur' },
+            { required: true, message: '请选择结束时间', trigger: 'blur' },
             { validator: validateTime, trigger: 'blur' }
           ],
           docContent: [
-            { required: true, message: '文案文字不能为空', trigger: 'blur' }
+            { required: true, message: '请输入文案文字', trigger: 'blur' }
           ],
           docRule: [
-            { required: true, message: '展示规则不能为空', trigger: 'blur' }
+            { required: true, message: '请选择展示规则', trigger: 'blur' }
           ],
           docMinTime: [
-            { required: true, message: '文案开始时间不能为空', trigger: 'blur' },
+            { required: true, message: '请选择文案开始时间', trigger: 'blur' },
             { validator: validateDocTime, trigger: 'blur' }
           ],
           docMaxTime: [
-            { required: true, message: '文案结束时间不能为空', trigger: 'blur' },
+            { required: true, message: '请选择文案结束时间', trigger: 'blur' },
             { validator: validateDocTime, trigger: 'blur' }
           ],
           shareTitle: [
-            { required: true, message: '文案标题不能为空', trigger: 'blur' }
+            { required: true, message: '请输入文案标题', trigger: 'blur' }
           ],
           shareContent: [
-            { required: true, message: '文案内容不能为空', trigger: 'blur' }
+            { required: true, message: '请输入文案内容', trigger: 'blur' }
           ],
           shareDetails: [
-            { required: true, message: '文案详情不能为空', trigger: 'blur' }
+            { required: true, message: '请输入文案详情', trigger: 'blur' }
           ],
           os: [
             { required: true, message: '请选择系统', trigger: 'blur' }
@@ -302,6 +303,7 @@
       },
       init (row) {
         this.visible = true
+        this.on_submit_loading = false
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (row) {
@@ -319,7 +321,7 @@
                 this.dataForm.redFlag = data.url.redFlag
                 this.dataForm.minTime = data.url.minTime
                 this.dataForm.maxTime = data.url.maxTime
-                this.dataForm.docFlag = data.url.docFlag
+                data.url.docFlag === 0 ? this.dataForm.docFlag = false : this.dataForm.docFlag = true
                 this.dataForm.docContent = data.url.docContent
                 this.dataForm.docRule = data.url.docRule
                 this.dataForm.docMinTime = data.url.docMinTime
@@ -357,6 +359,7 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.on_submit_loading = true
             var params = {
               'id': this.dataForm.id,
               'app': this.dataForm.app,
@@ -389,17 +392,22 @@
                   duration: 1500,
                   onClose: () => {
                     this.visible = false
+                    this.on_submit_loading = true
                     this.$emit('refreshDataList')
                   }
                 })
               } else {
                 this.$message.error(data.msg)
+                this.on_submit_loading = true
               }
+            }).catch(() => {
+              this.on_submit_loading = true
             })
           }
         })
       },
       showDocument () {
+        console.log(this.dataForm.docFlag)
         if (!this.dataForm.docFlag) {
           this.dataForm.docContent = ''
           this.dataForm.docRule = ''

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.id ? '新增' : '编辑'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
@@ -21,7 +21,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="on_submit_loading">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -45,6 +45,7 @@
         }
       }
       return {
+        on_submit_loading: false,
         visible: false,
         dataForm: {
           id: 0,
@@ -80,6 +81,7 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            this.on_submit_loading = true
             this.$http({
               url: this.$http.adornUrl(`/manager/version/save`),
               method: 'post',
@@ -97,12 +99,16 @@
                   duration: 1500,
                   onClose: () => {
                     this.visible = false
+                    this.on_submit_loading = false
                     this.$emit('refreshDataList')
                   }
                 })
               } else {
                 this.$message.error(data.msg)
+                this.on_submit_loading = false
               }
+            }).catch(() => {
+              this.on_submit_loading = false
             })
           }
         })
