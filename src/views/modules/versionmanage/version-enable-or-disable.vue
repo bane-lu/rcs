@@ -5,7 +5,7 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="0px">
       <el-form-item prop="secret">
-        <el-input v-model="dataForm.secret" placeholder=""></el-input>
+        <el-input type="password" v-model="dataForm.secret" placeholder=""></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

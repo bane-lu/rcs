@@ -78,7 +78,7 @@ router.beforeEach((to, from, next) => {
         var versionMenu = {
           icon: 'log',
           list: [],
-          menuId: 2,
+          menuId: 10,
           name: '版本管理',
           open: null,
           orderNum: 0,
@@ -91,7 +91,7 @@ router.beforeEach((to, from, next) => {
         var urlMenu = {
           icon: 'log',
           list: [],
-          menuId: 3,
+          menuId: 11,
           name: 'url管理',
           open: null,
           orderNum: 0,

@@ -36,7 +36,20 @@
       </div></el-col>
       <el-col :span="12"><div class="grid-content bg-purple">
           <label class="item_label">有效时间</label>
-          <el-date-picker
+
+            <el-date-picker
+              v-model="timerange"
+              type="datetimerange"
+              range-separator="~"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+              @change="transformTime"
+              format="yyyy-MM-dd HH:mm:ss"
+              value-format="timestamp"
+              :picker-options="myPickerOptions">
+            </el-date-picker>
+
+          <!-- <el-date-picker
              v-model="filter.minTime"
              type="datetime"
              value-format="yyyy-MM-dd HH:mm:ss"
@@ -52,7 +65,7 @@
              placeholder="结束时间"
              @change="transformTime"
              :picker-options="pickerOptions1">
-          </el-date-picker>
+          </el-date-picker> -->
       </div></el-col>
       <el-col :span="8"><div class="grid-content bg-purple">
           <el-button type="primary" @click="getDataList()">查询</el-button>
@@ -194,6 +207,26 @@
         dataListSelections: [],
         untransform_minTime: null,
         untransform_maxTime: null,
+        myPickerOptions: {
+          // shortcuts: [{
+          //   text: '最近一周',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     const step = 3600 * 1000 * 24;
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+          //     picker.$emit('pick', [start, end, step]);
+          //   }
+          // }, {
+          //   text: '最近三个月',
+          //   onClick(picker) {
+          //     const end = new Date();
+          //     const start = new Date();
+          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+          //     picker.$emit('pick', [start, end]);
+          //   }
+          // }]
+        },
         pickerOptions0: {
           disabledDate: (time) => {
             if (this.untransform_maxTime) {
@@ -238,8 +271,8 @@
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/manager/url/list'),
-          method: 'post',
-          data: this.$http.adornData({
+          method: 'get',
+          params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
             'app': this.filter.app,
@@ -258,6 +291,8 @@
             this.dataList = []
             this.totalPage = 0
           }
+          this.dataListLoading = false
+        }).catch(({data}) => {
           this.dataListLoading = false
         })
       },
@@ -296,6 +331,8 @@
       },
       // 格式化日期选择器
       transformTime (time) {
+        let cha = time[1] - time[0]
+        console.log(cha)
         return time
       },
       deleteHandle (row) {
@@ -350,7 +387,7 @@
     margin-right: 10px;
   }
   /* 时间选择框 */
-  .el-date-editor.el-input, .el-date-editor.el-input__inner {
-    width: 240px;
+  .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
+    width: 360px;
   }
 </style>

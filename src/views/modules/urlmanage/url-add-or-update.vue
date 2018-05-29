@@ -375,13 +375,12 @@
         })
       },
       showDocument () {
-        console.log(this.dataForm.docFlag)
-        // if(!this.dataForm.docFlag){
-        //   this.dataForm.docContent = ''
-        //   this.dataForm.docRule = ''
-        //   this.dataForm.docMinTime = ''
-        //   this.dataForm.docMaxTime = ''
-        // }
+        if (!this.dataForm.docFlag) {
+          this.dataForm.docContent = ''
+          this.dataForm.docRule = ''
+          this.dataForm.docMinTime = ''
+          this.dataForm.docMaxTime = ''
+        }
       },
       get_app_type () {
         this.$http({

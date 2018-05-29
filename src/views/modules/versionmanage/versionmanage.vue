@@ -129,7 +129,7 @@
         this.$http({
           url: this.$http.adornUrl('/manager/version/list'),
           method: 'post',
-          data: this.$http.adornData({
+          params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
             'app': this.dataForm.paramApp
