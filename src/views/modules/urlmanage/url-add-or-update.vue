@@ -230,19 +230,24 @@
             { required: true, message: 'app不能为空', trigger: 'blur' }
           ],
           urlName: [
-            { validator: validateUrlname, required: true, trigger: 'blur' }
+            { required: true, message: 'urlName不能为空', trigger: 'blur' },
+            { validator: validateUrlname, trigger: 'blur' }
           ],
           url: [
-            { validator: validateUrladdress, required: true, trigger: 'blur' }
+            { required: true, message: 'url地址不能为空', trigger: 'blur' },
+            { validator: validateUrladdress, trigger: 'blur' }
           ],
           version: [
-            { validator: validateVersion, required: true, trigger: 'blur' }
+            { required: true, message: '版本不能为空', trigger: 'blur' },
+            { validator: validateVersion, trigger: 'blur' }
           ],
           minTime: [
-            { validator: validateTime, required: true, trigger: 'blur' }
+            { required: true, message: '开始时间不能为空', trigger: 'blur' },
+            { validator: validateTime, trigger: 'blur' }
           ],
           maxTime: [
-            { validator: validateTime, required: true, trigger: 'blur' }
+            { required: true, message: '结束时间不能为空', trigger: 'blur' },
+            { validator: validateTime, trigger: 'blur' }
           ],
           docContent: [
             { required: true, message: '文案文字不能为空', trigger: 'blur' }
@@ -251,10 +256,12 @@
             { required: true, message: '展示规则不能为空', trigger: 'blur' }
           ],
           docMinTime: [
-            { validator: validateDocTime, required: true, trigger: 'blur' }
+            { required: true, message: '文案开始时间不能为空', trigger: 'blur' },
+            { validator: validateDocTime, trigger: 'blur' }
           ],
           docMaxTime: [
-            { validator: validateDocTime, required: true, trigger: 'blur' }
+            { required: true, message: '文案结束时间不能为空', trigger: 'blur' },
+            { validator: validateDocTime, trigger: 'blur' }
           ],
           shareTitle: [
             { required: true, message: '文案标题不能为空', trigger: 'blur' }

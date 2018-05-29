@@ -10,8 +10,7 @@
       <el-form-item label="描述" prop="paramDes">
         <el-input v-model="dataForm.paramDes"
           placeholder="描述"
-          maxlength="20"
-          @input="des_input"></el-input>
+          maxlength="20"></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="paramStatus">
         <el-radio-group v-model="dataForm.paramStatus">
@@ -55,10 +54,12 @@
         },
         dataRule: {
           paramApp: [
-            { validator: validateApp, required: true, trigger: 'blur' }
+            { required: true, message: 'APP不能为空', trigger: 'blur' },
+            { validator: validateApp, trigger: 'blur' }
           ],
           paramDes: [
-            { validator: validateDes, required: true, trigger: 'blur' }
+            { required: true, message: '描述不能为空', trigger: 'blur' },
+            { validator: validateDes, trigger: 'blur' }
           ],
           paramStatus: [
             { required: true, message: '请选择一种状态', trigger: 'blur' }
@@ -67,10 +68,6 @@
       }
     },
     methods: {
-      des_input () {
-        var regStr = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g
-        this.dataForm.paramDes = this.dataForm.paramDes.replace(regStr, '')
-      },
       init (id) {
         this.$nextTick(() => {
           this.visible = true

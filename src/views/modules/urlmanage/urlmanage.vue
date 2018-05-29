@@ -55,7 +55,7 @@
           </el-date-picker>
       </div></el-col>
       <el-col :span="8"><div class="grid-content bg-purple">
-          <el-button type="primary" @click="getDataList()">查询</el-button>
+          <el-button type="primary" @click="search()">查询</el-button>
           <el-button type="success" @click="addOrUpdateHandle()">新增</el-button>
           <el-button type="info" @click="reset()">重置</el-button>
           <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
@@ -214,7 +214,12 @@
       this.getDataList()
     },
     methods: {
+      search () {
+        this.pageIndex = 1
+        this.getDataList()
+      },
       reset () {
+        this.pageIndex = 1
         this.filter.app = null
         this.filter.urlName = null
         this.filter.urlsearch = null
