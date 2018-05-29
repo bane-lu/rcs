@@ -103,7 +103,7 @@
                value-format="yyyy-MM-dd HH:mm:ss"
                placeholder="yyy/mm/dd"
                :editable = "isEditable"
-               @change="transformTime"
+               @change="transformDocTime"
                :picker-options="pickerOptions0">
             </el-date-picker>
           </el-form-item>
@@ -116,7 +116,7 @@
                value-format="yyyy-MM-dd HH:mm:ss"
                placeholder="yyy/mm/dd"
                :editable = "isEditable"
-               @change="transformTime"
+               @change="transformDocTime"
                :picker-options="pickerOptions1">
             </el-date-picker>
           </el-form-item>
@@ -135,8 +135,8 @@
       </el-form-item>
       <el-form-item label="系统选择" prop="os" label-width="100px">
         <el-checkbox-group v-model="dataForm.os" :disabled="dataForm.id == '' ? false : true">
-          <el-checkbox label="IOS"></el-checkbox>
-          <el-checkbox label="Android"></el-checkbox>
+          <el-checkbox label="1">IOS</el-checkbox>
+          <el-checkbox label="2">Android</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
     </el-form>
@@ -148,7 +148,7 @@
 </template>
 
 <script>
-  import { isChinese, isURL, isVersion } from '@/utils/validate'
+  import { isChinese, isURL, isVersion, compareTime } from '@/utils/validate'
   export default {
     data () {
       var validateUrlname = (rule, value, callback) => {
@@ -168,6 +168,20 @@
       var validateVersion = (rule, value, callback) => {
         if (!isVersion(value)) {
           callback(new Error('版本格式错误（如:2.4.3)'))
+        } else {
+          callback()
+        }
+      }
+      var validateTime = (rule, value, callback) => {
+        if (!this.timeCheck) {
+          callback(new Error('起止时间间隔须为24小时以上'))
+        } else {
+          callback()
+        }
+      }
+      var validateDocTime = (rule, value, callback) => {
+        if (!this.docTimeCheck) {
+          callback(new Error('文案起止时间间隔须为24小时以上'))
         } else {
           callback()
         }
@@ -207,6 +221,10 @@
             return time.getTime() < this.dataForm.minTime || time.getTime() > Date.now()
           }
         },
+        // 时间校验成功判断
+        timeCheck: false,
+        // 文案时间校验成功判断
+        docTimeCheck: false,
         dataRule: {
           app: [
             { required: true, message: 'app不能为空', trigger: 'blur' }
@@ -221,10 +239,10 @@
             { validator: validateVersion, required: true, trigger: 'blur' }
           ],
           minTime: [
-            { required: true, message: '有效期选择,开始不能为空', trigger: 'blur' }
+            { validator: validateTime, required: true, trigger: 'blur' }
           ],
           maxTime: [
-            { required: true, message: '有效期选择,结束不能为空', trigger: 'blur' }
+            { validator: validateTime, required: true, trigger: 'blur' }
           ],
           docContent: [
             { required: true, message: '文案文字不能为空', trigger: 'blur' }
@@ -233,29 +251,29 @@
             { required: true, message: '展示规则不能为空', trigger: 'blur' }
           ],
           docMinTime: [
-            { required: true, message: '展示时间,开始不能为空', trigger: 'blur' }
+            { validator: validateDocTime, required: true, trigger: 'blur' }
           ],
           docMaxTime: [
-            { required: true, message: '展示时间,结束不能为空', trigger: 'blur' }
+            { validator: validateDocTime, required: true, trigger: 'blur' }
           ],
           shareTitle: [
-            { required: true, message: '分享文案标题不能为空', trigger: 'blur' }
+            { required: true, message: '文案标题不能为空', trigger: 'blur' }
           ],
           shareContent: [
-            { required: true, message: '分享文案内容不能为空', trigger: 'blur' }
+            { required: true, message: '文案内容不能为空', trigger: 'blur' }
           ],
           shareDetails: [
-            { required: true, message: '分享文案详情不能为空', trigger: 'blur' }
+            { required: true, message: '文案详情不能为空', trigger: 'blur' }
           ],
           os: [
-            { required: true, message: '系统选择,1:IOS 2:Android不能为空', trigger: 'blur' }
+            { required: true, message: '请选择系统', trigger: 'blur' }
           ]
         }
       }
     },
     computed: {
       newOS () {
-        return this.dataForm.os.join('-')
+        return this.dataForm.os.join(',')
       },
       newDocFlag () {
         if (this.dataForm.docFlag) {
@@ -333,7 +351,7 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             var params = {
-              'id': this.dataForm.id || undefined,
+              'id': this.dataForm.id,
               'app': this.dataForm.app,
               'urlName': this.dataForm.urlName,
               'url': this.dataForm.url,
@@ -353,7 +371,7 @@
               'os': this.newOS
             }
             this.$http({
-              url: this.$http.adornUrl(`/manager/url/save`),
+              url: this.$http.adornUrl(`/manager/url/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData(params)
             }).then(({data}) => {
@@ -394,7 +412,21 @@
         })
       },
       transformTime (time) {
-        console.log(time)
+        let sta = compareTime(this.dataForm.minTime, this.dataForm.maxTime, 3600 * 24 * 1000)
+        if (!sta) {
+          this.timeCheck = false
+        } else {
+          this.timeCheck = true
+        }
+        return time
+      },
+      transformDocTime (time) {
+        let sta = compareTime(this.dataForm.docMinTime, this.dataForm.docMaxTime, 3600 * 24 * 1000)
+        if (!sta) {
+          this.docTimeCheck = false
+        } else {
+          this.docTimeCheck = true
+        }
         return time
       }
     }

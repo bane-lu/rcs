@@ -8,7 +8,10 @@
         <el-input v-model="dataForm.paramApp" placeholder="APP" maxlength="20"></el-input>
       </el-form-item>
       <el-form-item label="描述" prop="paramDes">
-        <el-input v-model="dataForm.paramDes" placeholder="描述" maxlength="20"></el-input>
+        <el-input v-model="dataForm.paramDes"
+          placeholder="描述"
+          maxlength="20"
+          @input="des_input"></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="paramStatus">
         <el-radio-group v-model="dataForm.paramStatus">
@@ -25,12 +28,19 @@
 </template>
 
 <script>
-  import { isEnglish } from '@/utils/validate'
+  import { isEnglish, isUniqueChart } from '@/utils/validate'
   export default {
     data () {
       var validateApp = (rule, value, callback) => {
         if (!isEnglish(value)) {
           callback(new Error('只能输入英字'))
+        } else {
+          callback()
+        }
+      }
+      var validateDes = (rule, value, callback) => {
+        if (!isUniqueChart(value)) {
+          callback(new Error('不能输入特殊字符'))
         } else {
           callback()
         }
@@ -48,15 +58,19 @@
             { validator: validateApp, required: true, trigger: 'blur' }
           ],
           paramDes: [
-            { required: true, message: '名称不能为空', trigger: 'blur' }
+            { validator: validateDes, required: true, trigger: 'blur' }
           ],
           paramStatus: [
-            { required: true, message: '名称不能为空', trigger: 'blur' }
+            { required: true, message: '请选择一种状态', trigger: 'blur' }
           ]
         }
       }
     },
     methods: {
+      des_input () {
+        var regStr = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g
+        this.dataForm.paramDes = this.dataForm.paramDes.replace(regStr, '')
+      },
       init (id) {
         this.$nextTick(() => {
           this.visible = true

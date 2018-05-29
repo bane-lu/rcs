@@ -36,20 +36,7 @@
       </div></el-col>
       <el-col :span="12"><div class="grid-content bg-purple">
           <label class="item_label">有效时间</label>
-
-            <el-date-picker
-              v-model="timerange"
-              type="datetimerange"
-              range-separator="~"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-              @change="transformTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              value-format="timestamp"
-              :picker-options="myPickerOptions">
-            </el-date-picker>
-
-          <!-- <el-date-picker
+          <el-date-picker
              v-model="filter.minTime"
              type="datetime"
              value-format="yyyy-MM-dd HH:mm:ss"
@@ -65,7 +52,7 @@
              placeholder="结束时间"
              @change="transformTime"
              :picker-options="pickerOptions1">
-          </el-date-picker> -->
+          </el-date-picker>
       </div></el-col>
       <el-col :span="8"><div class="grid-content bg-purple">
           <el-button type="primary" @click="getDataList()">查询</el-button>
@@ -168,10 +155,9 @@
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
       :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
       :total="totalPage"
-      layout="total, sizes, prev, pager, next, jumper">
+      layout="total, prev, pager, next">
     </el-pagination>
     <!-- 新建弹窗 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
@@ -179,6 +165,7 @@
 </template>
 
 <script>
+  import { compareTime } from '@/utils/validate'
   import AddOrUpdate from './url-add-or-update'
   export default {
     data () {
@@ -201,48 +188,18 @@
         },
         dataList: [],
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 8,
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        untransform_minTime: null,
-        untransform_maxTime: null,
-        myPickerOptions: {
-          // shortcuts: [{
-          //   text: '最近一周',
-          //   onClick(picker) {
-          //     const end = new Date();
-          //     const start = new Date();
-          //     const step = 3600 * 1000 * 24;
-          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-          //     picker.$emit('pick', [start, end, step]);
-          //   }
-          // }, {
-          //   text: '最近三个月',
-          //   onClick(picker) {
-          //     const end = new Date();
-          //     const start = new Date();
-          //     start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-          //     picker.$emit('pick', [start, end]);
-          //   }
-          // }]
-        },
         pickerOptions0: {
           disabledDate: (time) => {
-            if (this.untransform_maxTime) {
-              return time.getTime() > this.untransform_maxTime - 8.64e7
-            } else {
-              return time.getTime() > Date.now() - 8.64e7
-            }
+            return time.getTime() > Date.now() - 8.64e7
           }
         },
         pickerOptions1: {
           disabledDate: (time) => {
-            if (this.untransform_minTime) {
-              return time.getTime() < this.untransform_minTime || time.getTime() > Date.now()
-            } else {
-              return time.getTime() > Date.now()
-            }
+            return time.getTime() > Date.now()
           }
         }
       }
@@ -331,8 +288,22 @@
       },
       // 格式化日期选择器
       transformTime (time) {
-        let cha = time[1] - time[0]
-        console.log(cha)
+        if (!this.filter.minTime) {
+          this.$message({
+            message: '请选择开始时间',
+            type: 'warning'
+          })
+        } else if (!this.filter.maxTime) {
+          this.$message('请选择结束时间')
+        } else {
+          let sta = compareTime(this.filter.minTime, this.filter.maxTime, 3600 * 24 * 1000)
+          if (!sta) {
+            this.$message({
+              message: '结束时间必须多于开始时间24小时以上',
+              type: 'warning'
+            })
+          }
+        }
         return time
       },
       deleteHandle (row) {

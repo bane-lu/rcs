@@ -47,11 +47,19 @@ export function isEnglish (s) {
 }
 
 /**
+ * 特殊字符不能输入
+ * @param {*} s
+ */
+export function isUniqueChart (s) {
+  return /^(\w|[\u4E00-\u9FA5]|[0-9]|[,./~!@#$%^&*()-+_=]|[\u3002\uff1b\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\u300a\u300b])*$/.test(s)
+}
+
+/**
  * 非字符串限制
  * @param {*} s
  */
 export function isForbiddenChart (s) {
-  // return !/[@#\$%\^&\*]+/g.test(s)
+  // return /[@#\$%\^&\*]+/g.test(s)
 }
 
 /**
@@ -63,9 +71,27 @@ export function isVersion (s) {
 }
 
 /**
- * verison   2.4.3
+ * isRedDot
  * @param {*} s
  */
 export function isRedDot (s) {
   return /^[0-9]{1,8}$/.test(s)
+}
+
+/**
+ * 时间戳比较
+ * @param {*} s
+ */
+export function compareTime (a, b, timeVal) {
+  let minDate = new Date(a)
+  let maxDate = new Date(b)
+  let chazhi = maxDate.getTime() - minDate.getTime()
+  // console.log(minDate.getTime())
+  // console.log(maxDate.getTime())
+  // console.log(chazhi)
+  if (chazhi < timeVal) {
+    return false
+  } else {
+    return true
+  }
 }
