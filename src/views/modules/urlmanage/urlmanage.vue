@@ -222,6 +222,7 @@
         this.filter.description = null
         this.filter.minTime = null
         this.filter.maxTime = null
+        this.getDataList()
       },
       // 获取数据列表
       getDataList () {
