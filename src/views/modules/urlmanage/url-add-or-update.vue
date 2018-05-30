@@ -321,7 +321,16 @@
                 this.dataForm.redFlag = data.url.redFlag
                 this.dataForm.minTime = data.url.minTime
                 this.dataForm.maxTime = data.url.maxTime
-                data.url.docFlag === 0 ? this.dataForm.docFlag = false : this.dataForm.docFlag = true
+                this.timeCheck = true
+                if (data.url.docFlag == 1) {
+                  console.log(1212)
+                  this.dataForm.docFlag = true
+                  this.docTimeCheck = true
+                } else {
+                  console.log(4545)
+                  this.dataForm.docFlag = false
+                  this.docTimeCheck = false
+                }
                 this.dataForm.docContent = data.url.docContent
                 this.dataForm.docRule = data.url.docRule
                 this.dataForm.docMinTime = data.url.docMinTime
