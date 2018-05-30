@@ -36,8 +36,12 @@
       init (row) {
         this.visible = true
         this.dataForm.id = row.id
-        this.dataForm.paramStatus = row.status
         this.dataForm.secret = ''
+        if (row.status == 0) {
+          this.dataForm.paramStatus = 1
+        } else {
+          this.dataForm.paramStatus = 0
+        }
       },
       // 表单提交
       dataFormSubmit () {

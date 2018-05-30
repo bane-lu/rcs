@@ -101,7 +101,7 @@
                v-model="dataForm.docMinTime"
                type="datetime"
                value-format="yyyy-MM-dd HH:mm:ss"
-               placeholder="yyy/mm/dd"
+               placeholder="文案开始时间"
                :editable = "isEditable"
                @change="transformDocTime"
                :picker-options="pickerOptions0">
@@ -114,7 +114,7 @@
                v-model="dataForm.docMaxTime"
                type="datetime"
                value-format="yyyy-MM-dd HH:mm:ss"
-               placeholder="yyy/mm/dd"
+               placeholder="文案结束时间"
                :editable = "isEditable"
                @change="transformDocTime"
                :picker-options="pickerOptions1">
