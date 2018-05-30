@@ -17,7 +17,7 @@
       </div></el-col>
       <el-col :span="6"><div class="grid-content bg-purple">
           <label class="item_label">Url查询</label>
-          <el-input v-model="filter.urlsearch" placeholder="请输入"></el-input>
+          <el-input v-model="filter.url" placeholder="请输入"></el-input>
       </div></el-col>
       <el-col :span="6"><div class="grid-content bg-purple">
           <label class="item_label">开启状态</label>
@@ -181,7 +181,7 @@
           id: null,
           app: null,
           urlName: null,
-          urlsearch: null,
+          url: null,
           status: null,
           description: null,
           minTime: null,
@@ -223,7 +223,7 @@
         this.pageIndex = 1
         this.filter.app = null
         this.filter.urlName = null
-        this.filter.urlsearch = null
+        this.filter.url = null
         this.filter.status = null
         this.filter.description = null
         this.filter.minTime = null
