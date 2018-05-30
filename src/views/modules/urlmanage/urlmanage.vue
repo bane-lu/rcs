@@ -41,8 +41,7 @@
              type="datetime"
              value-format="yyyy-MM-dd HH:mm:ss"
              placeholder="开始时间"
-             @change="transformTime"
-             :picker-options="pickerOptions0">
+             @change="transformTime">
           </el-date-picker>
           <span>&nbsp;-&nbsp;</span>
           <el-date-picker
@@ -50,8 +49,7 @@
              type="datetime"
              value-format="yyyy-MM-dd HH:mm:ss"
              placeholder="结束时间"
-             @change="transformTime"
-             :picker-options="pickerOptions1">
+             @change="transformTime">
           </el-date-picker>
       </div></el-col>
       <el-col :span="8"><div class="grid-content bg-purple">
@@ -192,17 +190,7 @@
         pageSize: 8,
         totalPage: 0,
         dataListLoading: false,
-        dataListSelections: [],
-        pickerOptions0: {
-          disabledDate: (time) => {
-            return time.getTime() > Date.now() - 8.64e7
-          }
-        },
-        pickerOptions1: {
-          disabledDate: (time) => {
-            return time.getTime() > Date.now()
-          }
-        }
+        dataListSelections: []
       }
     },
     components: {

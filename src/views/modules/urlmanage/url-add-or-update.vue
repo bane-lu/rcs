@@ -52,8 +52,7 @@
                value-format="yyyy-MM-dd HH:mm:ss"
                placeholder="开始时间"
                :editable = "isEditable"
-               @change="transformTime"
-               :picker-options="pickerOptions0">
+               @change="transformTime">
             </el-date-picker>
           </el-form-item>
         </div></el-col>
@@ -65,8 +64,7 @@
                value-format="yyyy-MM-dd HH:mm:ss"
                placeholder="结束时间"
                :editable = "isEditable"
-               @change="transformTime"
-               :picker-options="pickerOptions1">
+               @change="transformTime">
             </el-date-picker>
           </el-form-item>
         </div></el-col>
@@ -103,8 +101,7 @@
                value-format="yyyy-MM-dd HH:mm:ss"
                placeholder="文案开始时间"
                :editable = "isEditable"
-               @change="transformDocTime"
-               :picker-options="pickerOptions0">
+               @change="transformDocTime">
             </el-date-picker>
           </el-form-item>
         </div></el-col>
@@ -116,8 +113,7 @@
                value-format="yyyy-MM-dd HH:mm:ss"
                placeholder="文案结束时间"
                :editable = "isEditable"
-               @change="transformDocTime"
-               :picker-options="pickerOptions1">
+               @change="transformDocTime">
             </el-date-picker>
           </el-form-item>
         </div></el-col>
@@ -193,6 +189,7 @@
         // 设置日期选择器不可输入文本
         isEditable: false,
         dataForm: {
+          createTime: '',
           id: '',
           app: '',
           urlName: '',
@@ -211,16 +208,6 @@
           shareContent: '',
           shareDetails: '',
           os: []
-        },
-        pickerOptions0: {
-          disabledDate: (time) => {
-            return time.getTime() > Date.now()
-          }
-        },
-        pickerOptions1: {
-          disabledDate: (time) => {
-            return time.getTime() < this.dataForm.minTime || time.getTime() > Date.now()
-          }
         },
         // 时间校验成功判断
         timeCheck: false,
@@ -299,7 +286,7 @@
         this.dataForm.url = this.dataForm.url.replace(/\s+/g, '')
       },
       redDot_input () {
-        console.log(this.dataForm.redFlag)
+        // console.log(this.dataForm.redFlag)
       },
       init (row) {
         this.visible = true
@@ -313,6 +300,7 @@
               method: 'get'
             }).then(({data}) => {
               if (data && data.code === 0) {
+                this.dataForm.createTime = data.url.createTime
                 this.dataForm.app = data.url.app
                 this.dataForm.urlName = data.url.urlName
                 this.dataForm.url = data.url.url
@@ -323,11 +311,9 @@
                 this.dataForm.maxTime = data.url.maxTime
                 this.timeCheck = true
                 if (data.url.docFlag == 1) {
-                  console.log(1212)
                   this.dataForm.docFlag = true
                   this.docTimeCheck = true
                 } else {
-                  console.log(4545)
                   this.dataForm.docFlag = false
                   this.docTimeCheck = false
                 }
@@ -343,6 +329,7 @@
             }).catch(() => {
             })
           } else {
+            this.dataForm.createTime = ''
             this.dataForm.id = ''
             this.dataForm.app = ''
             this.dataForm.urlName = ''
@@ -370,6 +357,7 @@
           if (valid) {
             this.on_submit_loading = true
             var params = {
+              'createTime': this.dataForm.createTime,
               'id': this.dataForm.id,
               'app': this.dataForm.app,
               'urlName': this.dataForm.urlName,
@@ -401,16 +389,16 @@
                   duration: 1500,
                   onClose: () => {
                     this.visible = false
-                    this.on_submit_loading = true
+                    this.on_submit_loading = false
                     this.$emit('refreshDataList')
                   }
                 })
               } else {
                 this.$message.error(data.msg)
-                this.on_submit_loading = true
+                this.on_submit_loading = false
               }
             }).catch(() => {
-              this.on_submit_loading = true
+              this.on_submit_loading = false
             })
           }
         })
