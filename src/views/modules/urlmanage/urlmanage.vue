@@ -302,11 +302,11 @@
         return time
       },
       deleteHandle (row) {
-        var id = row.id
-        var ids = id ? [id] : this.dataListSelections.map(item => {
-          return item.roleId
+        var ids = row ? [row.id] : this.dataListSelections.map(item => {
+          return item.id
         })
-        this.$confirm(`确定对[ id = ${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+        console.log(ids)
+        this.$confirm(`确定对[ id = ${ids.join(',')}]进行[${row ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
