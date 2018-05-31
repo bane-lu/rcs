@@ -11,8 +11,8 @@
           ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="isAuth('versionmanage:versionmanage:search')" @click="search()">查询</el-button>
-        <el-button type="primary" v-if="isAuth('versionmanage:versionmanage:add')" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('manager:version:list')" @click="search()">查询</el-button>
+        <el-button type="primary" v-if="isAuth('manager:version:save')" @click="addOrUpdateHandle()">新增</el-button>
         <!-- <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button> -->
       </el-form-item>
     </el-form>
@@ -63,7 +63,7 @@
         width="150"
         label="操作">
         <template slot-scope="props">
-          <el-button v-if="isAuth('versionmanage:versionmanage:status')" v-text="props.row.status == 1 ? '启用' : '停用'" :type="props.row.status == 1 ? 'success' : 'info'" size="mini" @click="enableOrDisable(props.row)"></el-button>
+          <el-button v-if="isAuth('manager:version:update')" v-text="props.row.status == 1 ? '启用' : '停用'" :type="props.row.status == 1 ? 'success' : 'info'" size="mini" @click="enableOrDisable(props.row)"></el-button>
           <!-- <el-button type="text" size="small" @click="addOrUpdateHandle(props.row.id)">修改</el-button> -->
           <!-- <el-button type="text" size="small" @click="deleteHandle(props.row.id)">删除</el-button> -->
         </template>
