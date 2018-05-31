@@ -22,7 +22,7 @@
       <el-col :span="6"><div class="grid-content bg-purple">
           <label class="item_label">开启状态</label>
           <el-select v-model="filter.status" placeholder="请选择">
-            <el-option label="请选择" value=""></el-option>
+            <el-option label="全部" value=""></el-option>
             <el-option label="开启" value="1"></el-option>
             <el-option label="关闭" value="0"></el-option>
           </el-select>
@@ -205,7 +205,26 @@
     methods: {
       search () {
         this.pageIndex = 1
-        this.getDataList()
+        if (this.filter.minTime || this.filter.maxTime) {
+          if (this.filter.minTime && this.filter.maxTime) {
+            let sta = compareTime(this.filter.minTime, this.filter.maxTime, 3600 * 24 * 1000)
+            if (!sta) {
+              this.$message({
+                message: '结束时间必须多于开始时间24小时以上',
+                type: 'warning'
+              })
+            } else {
+              this.getDataList()
+            }
+          } else {
+            this.$message({
+              message: '请补充起止时间',
+              type: 'warning'
+            })
+          }
+        } else {
+          this.getDataList()
+        }
       },
       reset () {
         this.pageIndex = 1
@@ -283,22 +302,6 @@
       },
       // 格式化日期选择器
       transformTime (time) {
-        if (!this.filter.minTime) {
-          this.$message({
-            message: '请选择开始时间',
-            type: 'warning'
-          })
-        } else if (!this.filter.maxTime) {
-          this.$message('请选择结束时间')
-        } else {
-          let sta = compareTime(this.filter.minTime, this.filter.maxTime, 3600 * 24 * 1000)
-          if (!sta) {
-            this.$message({
-              message: '结束时间必须多于开始时间24小时以上',
-              type: 'warning'
-            })
-          }
-        }
         return time
       },
       deleteHandle (row) {
