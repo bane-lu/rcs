@@ -75,34 +75,34 @@ router.beforeEach((to, from, next) => {
       params: http.adornParams()
     }).then(({data}) => {
       if (data && data.code === 0) {
-        var versionMenu = {
-          icon: 'log',
-          list: [],
-          menuId: 10,
-          name: '版本管理',
-          open: null,
-          orderNum: 0,
-          parentId: 0,
-          parentName: null,
-          perms: null,
-          type: 0,
-          url: 'versionmanage/versionmanage'
-        }
-        var urlMenu = {
-          icon: 'log',
-          list: [],
-          menuId: 11,
-          name: 'url管理',
-          open: null,
-          orderNum: 0,
-          parentId: 0,
-          parentName: null,
-          perms: null,
-          type: 0,
-          url: 'urlmanage/urlmanage'
-        }
-        data.menuList.push(versionMenu)
-        data.menuList.push(urlMenu)
+        // var versionMenu = {
+        //   icon: 'log',
+        //   list: [],
+        //   menuId: 10,
+        //   name: '版本管理',
+        //   open: null,
+        //   orderNum: 0,
+        //   parentId: 0,
+        //   parentName: null,
+        //   perms: null,
+        //   type: 0,
+        //   url: 'versionmanage/versionmanage'
+        // }
+        // var urlMenu = {
+        //   icon: 'log',
+        //   list: [],
+        //   menuId: 11,
+        //   name: 'url管理',
+        //   open: null,
+        //   orderNum: 0,
+        //   parentId: 0,
+        //   parentName: null,
+        //   perms: null,
+        //   type: 0,
+        //   url: 'urlmanage/urlmanage'
+        // }
+        // data.menuList.push(versionMenu)
+        // data.menuList.push(urlMenu)
         fnAddDynamicMenuRoutes(data.menuList)
         router.options.isAddDynamicMenuRoutes = true
         sessionStorage.setItem('menuList', JSON.stringify(data.menuList || '[]'))

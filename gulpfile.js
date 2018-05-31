@@ -17,7 +17,7 @@ var env         = ''; // 运行环境
   var h  = d.getHours() >= 10 ? d.getHours() : '0' + d.getHours();
   var mm = d.getMinutes() >= 10 ? d.getMinutes() : '0' + d.getMinutes();
   // version = yy + MM + DD + h + mm;
-  version = '20180528';
+  version = '20180531';
   versionPath = distPath + '/' + version;
 })();
 

@@ -53,10 +53,10 @@
           </el-date-picker>
       </div></el-col>
       <el-col :span="8"><div class="grid-content bg-purple">
-          <el-button type="primary" @click="search()">查询</el-button>
-          <el-button type="success" @click="addOrUpdateHandle()">新增</el-button>
-          <el-button type="info" @click="reset()">重置</el-button>
-          <el-button type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+          <el-button type="primary" v-if="isAuth('urlmanage:urlmanage:search')" @click="search()">查询</el-button>
+          <el-button type="success" v-if="isAuth('urlmanage:urlmanage:add')" @click="addOrUpdateHandle()">新增</el-button>
+          <el-button type="info" v-if="isAuth('urlmanage:urlmanage:reset')" @click="reset()">重置</el-button>
+          <el-button type="danger" v-if="isAuth('urlmanage:urlmanage:delete')" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </div></el-col>
     </el-row>
     <!-- 分页 -->
@@ -145,8 +145,8 @@
         width="150"
         label="操作">
         <template slot-scope="props">
-          <el-button type="primary" size="mini" @click="addOrUpdateHandle(props.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="deleteHandle(props.row)">删除</el-button>
+          <el-button type="primary" v-if="isAuth('urlmanage:urlmanage:update')" size="mini" @click="addOrUpdateHandle(props.row)">编辑</el-button>
+          <el-button type="danger" v-if="isAuth('urlmanage:urlmanage:delete')" size="mini" @click="deleteHandle(props.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
