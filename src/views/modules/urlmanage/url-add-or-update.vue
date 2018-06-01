@@ -130,9 +130,9 @@
         <el-input v-model="dataForm.shareDetails" placeholder="0/50" maxlength="50"></el-input>
       </el-form-item>
       <el-form-item label="系统选择" prop="os" label-width="100px">
-        <el-checkbox-group v-model="dataForm.os" :disabled="dataForm.id == '' ? false : true">
-          <el-checkbox label="1">IOS</el-checkbox>
-          <el-checkbox label="2">Android</el-checkbox>
+        <el-checkbox-group v-model="dataForm.os" >
+          <el-checkbox label="1" :disabled="androidStatus">IOS</el-checkbox>
+          <el-checkbox label="2" :disabled="iosStatus">Android</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
     </el-form>
@@ -207,8 +207,10 @@
           shareTitle: '',
           shareContent: '',
           shareDetails: '',
-          os: []
+          os: [1,2]
         },
+        androidStatus: false,
+        iosStatus: false,
         // 时间校验成功判断
         timeCheck: false,
         // 文案时间校验成功判断
@@ -252,13 +254,13 @@
             { validator: validateDocTime, trigger: 'blur' }
           ],
           shareTitle: [
-            { required: true, message: '请输入文案标题', trigger: 'blur' }
+            { required: false, message: '请输入文案标题', trigger: 'blur' }
           ],
           shareContent: [
-            { required: true, message: '请输入文案内容', trigger: 'blur' }
+            { required: false, message: '请输入文案内容', trigger: 'blur' }
           ],
           shareDetails: [
-            { required: true, message: '请输入文案详情', trigger: 'blur' }
+            { required: false, message: '请输入文案详情', trigger: 'blur' }
           ],
           os: [
             { required: true, message: '请选择系统', trigger: 'blur' }
@@ -291,6 +293,8 @@
       init (row) {
         this.visible = true
         this.on_submit_loading = false
+        this.androidStatus = false
+        this.iosStatus = false
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (row) {
@@ -324,7 +328,15 @@
                 this.dataForm.shareTitle = data.url.shareTitle
                 this.dataForm.shareContent = data.url.shareContent
                 this.dataForm.shareDetails = data.url.shareDetails
-                this.dataForm.os = data.url.os.split('-')
+                this.dataForm.os = data.url.os.split(',')
+                let that = this
+                this.dataForm.os.forEach(function(item,index){
+                  if (item == 1) {
+                    that.androidStatus = true
+                  }else if (item == 2) {
+                    that.iosStatus = true
+                  }
+                })
               }
             }).catch(() => {
             })
@@ -347,7 +359,9 @@
             this.dataForm.shareTitle = ''
             this.dataForm.shareContent = ''
             this.dataForm.shareDetails = ''
-            this.dataForm.os = []
+            this.dataForm.os = ["1","2"]
+            this.androidStatus = false
+            this.iosStatus = false
           }
         })
       },
