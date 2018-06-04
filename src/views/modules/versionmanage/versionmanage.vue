@@ -63,7 +63,7 @@
         width="150"
         label="操作">
         <template slot-scope="props">
-          <el-button v-if="isAuth('manager:version:update')" v-text="props.row.status == 1 ? '启用' : '停用'" :type="props.row.status == 1 ? 'success' : 'info'" size="mini" @click="enableOrDisable(props.row)"></el-button>
+          <el-button v-if="isAuth('manager:version:update')" v-text="props.row.status == 1 ? '禁用' : '启用'" :type="props.row.status == 0 ? 'success' : 'danger'" size="mini" @click="enableOrDisable(props.row)"></el-button>
           <!-- <el-button type="text" size="small" @click="addOrUpdateHandle(props.row.id)">修改</el-button> -->
           <!-- <el-button type="text" size="small" @click="deleteHandle(props.row.id)">删除</el-button> -->
         </template>
