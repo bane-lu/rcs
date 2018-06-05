@@ -131,8 +131,8 @@
       </el-form-item>
       <el-form-item label="系统选择" prop="os" label-width="100px">
         <el-checkbox-group v-model="dataForm.os" >
-          <el-checkbox label="1" :disabled="androidStatus">IOS</el-checkbox>
-          <el-checkbox label="2" :disabled="iosStatus">Android</el-checkbox>
+          <el-checkbox label="android" :disabled="androidStatus">Android</el-checkbox>
+          <el-checkbox label="iphone" :disabled="iosStatus">IOS</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
     </el-form>
@@ -207,7 +207,7 @@
           shareTitle: '',
           shareContent: '',
           shareDetails: '',
-          os: [1,2]
+          os: ['android','iphone']
         },
         androidStatus: false,
         iosStatus: false,
@@ -330,10 +330,11 @@
                 this.dataForm.shareDetails = data.url.shareDetails
                 this.dataForm.os = data.url.os.split(',')
                 let that = this
+                console.log(this.dataForm.os)
                 this.dataForm.os.forEach(function(item,index){
-                  if (item == 1) {
+                  if (item == 'android') {
                     that.androidStatus = true
-                  }else if (item == 2) {
+                  }else if (item == 'iphone') {
                     that.iosStatus = true
                   }
                 })
@@ -359,7 +360,7 @@
             this.dataForm.shareTitle = ''
             this.dataForm.shareContent = ''
             this.dataForm.shareDetails = ''
-            this.dataForm.os = ["1","2"]
+            this.dataForm.os = ["android","iphone"]
             this.androidStatus = false
             this.iosStatus = false
           }

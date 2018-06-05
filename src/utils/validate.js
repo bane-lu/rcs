@@ -43,7 +43,7 @@ export function isChinese (s) {
  * @param {*} s
  */
 export function isEnglish (s) {
-  return /^[a-zA-Z]*$/.test(s)
+  return /^([a-zA-Z]|[0-9]|[._])*$/.test(s)
 }
 
 /**

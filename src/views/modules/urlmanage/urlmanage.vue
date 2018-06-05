@@ -108,7 +108,7 @@
         align="center"
         label="系统">
         <template slot-scope="props">
-          <span v-text="props.row.os == 1 ? 'IOS' : 'Android'"></span>
+          <span v-text="props.row.os == 'android' ? 'Android' : 'IOS'"></span>
         </template>
       </el-table-column>
       <el-table-column
