@@ -20,7 +20,7 @@
             <el-input
               v-model="dataForm.urlName"
               placeholder="urlName"
-              maxlength="8"
+              maxlength="64"
               :disabled="dataForm.id == ''? false : true"></el-input>
           </el-form-item>
         </div></el-col>
@@ -144,12 +144,12 @@
 </template>
 
 <script>
-  import { isChinese, isURL, isVersion, compareTime } from '@/utils/validate'
+  import { isURL, isVersion, compareTime, isEnglish } from '@/utils/validate'
   export default {
     data () {
       var validateUrlname = (rule, value, callback) => {
-        if (!isChinese(value)) {
-          callback(new Error('只能输入汉字'))
+        if (!isEnglish(value)) {
+          callback(new Error('只能输入英文'))
         } else {
           callback()
         }
