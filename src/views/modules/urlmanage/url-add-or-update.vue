@@ -80,14 +80,6 @@
         <span class="redFlag_tip">8位数字（年月日）</span>
       </el-form-item>
 
-      <el-form-item label="识别码" label-width="110px" prop="adCode">
-        <el-input
-          v-model="dataForm.adCode"
-          placeholder="广告后台配置识别码"
-          maxlength="8"
-          class="reddot"></el-input>
-        <span class="redFlag_tip">8位数字（年月日）</span>
-      </el-form-item>
 
       <el-form-item label="文案展示" label-width="100px">
         <el-checkbox v-model="dataForm.docFlag" @change="showDocument">需要</el-checkbox>
@@ -128,6 +120,15 @@
           </el-form-item>
         </div></el-col>
       </el-row>
+      <el-form-item label="识别码" label-width="100px" prop="adCode" v-if="dataForm.docFlag">
+        <el-input
+          v-model="dataForm.adCode"
+          placeholder="广告后台配置识别码"
+          maxlength="8"
+          class="reddot"></el-input>
+        <span class="redFlag_tip">8位数字（年月日）</span>
+      </el-form-item>
+
 
       <h3>分享文案</h3>
       <el-form-item label="标题" prop="shareTitle" label-width="100px">
@@ -450,6 +451,7 @@
           this.dataForm.docRule = ''
           this.dataForm.docMinTime = ''
           this.dataForm.docMaxTime = ''
+          this.dataForm.adCode = ''
         }
       },
       get_app_type () {
