@@ -79,6 +79,16 @@
           class="reddot"></el-input>
         <span class="redFlag_tip">8位数字（年月日）</span>
       </el-form-item>
+
+      <el-form-item label="识别码" label-width="110px" prop="adCode">
+        <el-input
+          v-model="dataForm.adCode"
+          placeholder="广告后台配置识别码"
+          maxlength="8"
+          class="reddot"></el-input>
+        <span class="redFlag_tip">8位数字（年月日）</span>
+      </el-form-item>
+
       <el-form-item label="文案展示" label-width="100px">
         <el-checkbox v-model="dataForm.docFlag" @change="showDocument">需要</el-checkbox>
       </el-form-item>
@@ -144,7 +154,7 @@
 </template>
 
 <script>
-  import { isURL, isVersion, compareTime, isEnglish } from '@/utils/validate'
+  import { isURL, isVersion, compareTime, isEnglish, isNumber } from '@/utils/validate'
   export default {
     data () {
       var validateUrlname = (rule, value, callback) => {
@@ -157,6 +167,13 @@
       var validateUrladdress = (rule, value, callback) => {
         if (!isURL(value)) {
           callback(new Error('url格式错误'))
+        } else {
+          callback()
+        }
+      }
+      var validateAdCode = (rule, value, callback) => {
+        if (!isNumber(value)) {
+          callback(new Error('识别码格式错误（如:20180606)'))
         } else {
           callback()
         }
@@ -197,6 +214,7 @@
           version: '',
           description: '',
           redFlag: '',
+          adCode: '',
           minTime: '',
           maxTime: '',
           docFlag: true,
@@ -238,6 +256,10 @@
           maxTime: [
             { required: true, message: '请选择结束时间', trigger: 'blur' },
             { validator: validateTime, trigger: 'blur' }
+          ],
+          adCode: [
+            { required: true, message: '请输入识别码', trigger: 'blur' },
+            { validator: validateAdCode, trigger: 'blur' }
           ],
           docContent: [
             { required: true, message: '请输入文案文字', trigger: 'blur' }
@@ -311,6 +333,7 @@
                 this.dataForm.version = data.url.version
                 this.dataForm.description = data.url.description
                 this.dataForm.redFlag = data.url.redFlag
+                this.dataForm.adCode = data.url.adCode
                 this.dataForm.minTime = data.url.minTime
                 this.dataForm.maxTime = data.url.maxTime
                 this.timeCheck = true
@@ -350,6 +373,7 @@
             this.dataForm.version = ''
             this.dataForm.description = ''
             this.dataForm.redFlag = ''
+            this.dataForm.adCode = ''
             this.dataForm.minTime = ''
             this.dataForm.maxTime = ''
             this.dataForm.docFlag = false
@@ -380,6 +404,7 @@
               'version': this.dataForm.version,
               'description': this.dataForm.description,
               'redFlag': this.dataForm.redFlag,
+              'adCode': this.dataForm.adCode,
               'minTime': this.dataForm.minTime,
               'maxTime': this.dataForm.maxTime,
               'docFlag': this.newDocFlag,

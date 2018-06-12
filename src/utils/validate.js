@@ -47,6 +47,14 @@ export function isEnglish (s) {
 }
 
 /**
+ * 仅数字
+ * @param {*} s
+ */
+export function isNumber (s) {
+  return /^([0-9]{8})*$/.test(s)
+}
+
+/**
  * 特殊字符不能输入
  * @param {*} s
  */
