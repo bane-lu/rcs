@@ -143,11 +143,10 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
   for (var i = 0; i < menuList.length; i++) {
     if (menuList[i].list && menuList[i].list.length >= 1) {
       temp = temp.concat(menuList[i].list)
-    } else if (/\S/.test(menuList[i].url)) {
+    } else if (menuList[i].url != null) {
       // if (menuList.length > 7) {
       //   menuList.splice(3, 1)
       // };
-
       menuList[i].url = menuList[i].url.replace(/^\//, '')
       // menuList[i].con = menuList[i].url
 

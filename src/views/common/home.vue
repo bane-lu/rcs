@@ -1,6 +1,6 @@
 <template>
   <div class="mod-home">
-    <h3>版本管理 - URL管理</h3>
+    <h3>版本管理-RL管理</h3>
     <!-- <h3>项目介绍</h3> -->
     <!-- <ul>
       <li>renren-fast-vue基于vue、element-ui构建开发，实现<a href="https://gitee.com/renrenio/renren-fast" target="_blank">renren-fast</a>后台管理前端功能，提供一套更优的前端解决方案</li>

@@ -5,6 +5,7 @@
   window.SITE_CONFIG = {};
 
   // api接口请求地址
+  // window.SITE_CONFIG['baseUrl'] = '//x.x.x.x:8080/web-manager';
   window.SITE_CONFIG['baseUrl'] = '//221.176.34.113:8080/web-manager';
 
   // cdn地址 = 域名 + 版本号

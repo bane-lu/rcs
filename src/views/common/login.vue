@@ -3,8 +3,8 @@
     <div class="site-content__wrapper">
       <div class="site-content">
         <div class="brand-info">
-          <h2 class="brand-info__text">URL-MANAGER-SYSTEM</h2>
-          <p class="brand-info__intro">URL-MANAGER-SYSTEM用于后台版本管理、url管理。</p>
+          <h2 class="brand-info__text">密友圈运营支撑后台</h2>
+          <p class="brand-info__intro">用于内部运营人员进行业务数据查询</p>
         </div>
         <div class="login-main">
           <h3 class="login-title">管理员登录</h3>
