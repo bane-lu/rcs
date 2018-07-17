@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>送话费查询</p>
+    <p>上传权限</p>
   </div>
 </template>
 

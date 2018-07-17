@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>8G失败原因查询</p>
+    <p>应用管理</p>
   </div>
 </template>
 

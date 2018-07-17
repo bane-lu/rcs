@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>业务订购查询</p>
+    <p>日志下载</p>
   </div>
 </template>
 
