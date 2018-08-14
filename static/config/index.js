@@ -1,22 +1,15 @@
 /**
- * 开发环境
+ * 生产环境
  */
 ;(function () {
   window.SITE_CONFIG = {};
-  // 获取服务器url
-  // function getBasePath(){
-  //      var curWwwPath = window.document.location.href;
-  //      var pathName = window.document.location.pathname;
-  //      var pos = curWwwPath.indexOf(pathName);
-  //      var localhostPath = curWwwPath.substring(0, pos);
-  //      var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
-  //      var basePath=localhostPath;
-  //      return basePath;
-  // }
-  // var basePath = getBasePath()
+
   // api接口请求地址
+  // 测试环境
   window.SITE_CONFIG['baseUrl'] = '//221.176.34.113:8080/web-manager';
-  // window.SITE_CONFIG['baseUrl'] = 'http://localhost:8080/renren-fast';
+
+  // 预生产
+  // window.SITE_CONFIG['baseUrl'] = '//221.176.34.113:8761/web-manager';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain']  = './'; // 域名
