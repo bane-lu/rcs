@@ -69,7 +69,6 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            console.log(this.dataForm)
             this.$http({
               url: this.$http.adornUrl('/sys/login'),
               method: 'post',

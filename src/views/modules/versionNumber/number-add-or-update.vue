@@ -6,7 +6,7 @@
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
 
       <el-form-item label="APP" prop="managerVersionId">
-        <el-select v-model="dataForm.managerVersionId" placeholder="请选择">
+        <el-select v-model="dataForm.app" placeholder="请选择" :disabled="isEditable">
           <el-option
             :label="item.app"
             :value="item.id"
@@ -29,10 +29,15 @@
 
       <el-form-item label="系统" prop="os">
         <el-checkbox-group v-model="dataForm.os">
-          <el-checkbox label="android">android</el-checkbox>
-          <el-checkbox label="iphone">iphone</el-checkbox>
+          <el-checkbox label="android" :disabled="isEditable">android</el-checkbox>
+          <el-checkbox label="iphone" :disabled="isEditable">iphone</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
+
+      <el-form-item label="确认码" prop="commitKey">
+        <el-input v-model="dataForm.commitKey"
+          placeholder="请输入确认码"
+          maxlength="20"></el-input>
       </el-form-item>
 
     </el-form>
@@ -64,6 +69,7 @@
       return {
         on_submit_loading: false,
         visible: false,
+        isEditable: true,
         dataForm: {
           id: null,
           createBy: null,
@@ -74,6 +80,7 @@
           remark: null,
           createTime: null,
           updateTime: null,
+          commitKey: null
         },
         dataRule: {
           managerVersionId: [
@@ -85,6 +92,9 @@
           ],
           status: [
             { required: true, message: '状态不能为空', trigger: 'blur' }
+          ],
+          commitKey: [
+            { required: true, message: '确认码不能为空', trigger: 'blur' }
           ],
           os: [
             { required: true, message: '系统不能为空', trigger: 'blur' }
@@ -103,21 +113,25 @@
       init (row) {
         this.dataForm.id = null
         row && (this.dataForm.id = row.id)
-        console.log(this.dataForm.id);
+
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (row) {
+            this.isEditable = true
             this.dataForm.createBy = row.createBy
             this.dataForm.createTime = row.createTime
             this.dataForm.id = row.id
+            this.dataForm.app = row.app
             this.dataForm.managerVersionId = row.managerVersionId
             this.dataForm.os.push(row.os)
             this.dataForm.remark = row.remark
             this.dataForm.status = row.status
             this.dataForm.updateTime = row.updateTime
             this.dataForm.version = row.version
+            this.dataForm.commitKey = null
           }else {
+            this.isEditable = false
             this.dataForm.createBy = null
             this.dataForm.createTime = null
             this.dataForm.id = null
@@ -127,12 +141,14 @@
             this.dataForm.status = null
             this.dataForm.updateTime = null
             this.dataForm.version = null
+            this.dataForm.commitKey = null
           }
         })
 
       },
       // 表单提交
       dataFormSubmit () {
+        console.log(this.dataForm);
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.on_submit_loading = true
@@ -148,7 +164,8 @@
                 'remark': this.dataForm.remark,
                 'status': this.dataForm.status,
                 'updateTime': this.dataForm.updateTime,
-                'version': this.dataForm.version
+                'version': this.dataForm.version,
+                'commitKey': this.dataForm.commitKey
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

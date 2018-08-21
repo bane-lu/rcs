@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     id="copy-panel"
-    :title="复制新增"
+    title="复制新增"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
@@ -9,10 +9,12 @@
         <span class="title">请选择您要复制的版本号信息</span>
       </el-form-item>
 
-      <el-form-item label="">
+      <el-form-item label=""
+       v-if="isAuth('manager:versioninf:getAppOsVersionList')"
+       props="exist">
         <el-cascader
-          :options="options"
-          v-model="version"
+          :options="versionOptions"
+          v-model="dataForm.exist"
           @change="versionHandleChange">
         </el-cascader>
       </el-form-item>
@@ -21,35 +23,11 @@
         <span class="title">请输入您要创建的版本号</span>
       </el-form-item>
 
-      <el-form-item label="" prop="version">
-        <el-input v-model="dataForm.version"
+      <el-form-item label="" prop="newVersion">
+        <el-input v-model="dataForm.newVersion"
           placeholder="新的版本号"
           maxlength="20"></el-input>
       </el-form-item>
-
-      <!-- <el-form-item label="APP" prop="managerVersionId">
-        <el-select v-model="dataForm.managerVersionId" placeholder="请选择">
-          <el-option
-            :label="item.app"
-            :value="item.id"
-            :key="index"
-            v-for="(item,index) in to_app_type">{{item.app}}</el-option>
-        </el-select>
-      </el-form-item> -->
-
-      <!-- <el-form-item label="描述" prop="remark">
-        <el-input v-model="dataForm.remark"
-          placeholder="请输入相关描述"
-          maxlength="200"></el-input>
-      </el-form-item> -->
-
-      <!-- <el-form-item label="系统" prop="os">
-        <el-checkbox-group v-model="dataForm.os">
-          <el-checkbox label="android">android</el-checkbox>
-          <el-checkbox label="iphone">iphone</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      </el-form-item> -->
 
     </el-form>
 
@@ -80,31 +58,26 @@
       return {
         on_submit_loading: false,
         visible: false,
+        versionOptions: [],
         dataForm: {
-          id: null,
-          createBy: null,
-          managerVersionId: null,
-          version: null,
-          status: null,
-          os: [],
-          remark: null,
-          createTime: null,
-          updateTime: null,
+          exist: [],
+          existVersion: '',
+        	newVersion: null
         },
         dataRule: {
-          managerVersionId: [
-            { required: true, message: 'APP不能为空', trigger: 'blur' },
-          ],
-          version: [
-            { required: true, message: '版本不能为空', trigger: 'blur' },
-            { validator: validateVersion, trigger: 'blur' }
-          ],
-          status: [
-            { required: true, message: '状态不能为空', trigger: 'blur' }
-          ],
-          os: [
-            { required: true, message: '系统不能为空', trigger: 'blur' }
-          ]
+          // managerVersionId: [
+          //   { required: true, message: 'APP不能为空', trigger: 'blur' },
+          // ],
+          // version: [
+          //   { required: true, message: '版本不能为空', trigger: 'blur' },
+          //   { validator: validateVersion, trigger: 'blur' }
+          // ],
+          // status: [
+          //   { required: true, message: '状态不能为空', trigger: 'blur' }
+          // ],
+          // os: [
+          //   { required: true, message: '系统不能为空', trigger: 'blur' }
+          // ]
         }
       }
     },
@@ -116,31 +89,78 @@
     mounted () {
     },
     methods: {
-      init (row) {
-        this.dataForm.id = null
-        row && (this.dataForm.id = row.id)
-        console.log(this.dataForm.id);
+      init () {
         this.visible = true
         this.$nextTick(() => {
+          this.get_version_type()
           this.$refs['dataForm'].resetFields()
-          if (row) {
-
-          }else {
-            this.dataForm.createBy = null
-            this.dataForm.createTime = null
-            this.dataForm.id = null
-            this.dataForm.managerVersionId = null
-            this.dataForm.os = []
-            this.dataForm.remark = null
-            this.dataForm.status = null
-            this.dataForm.updateTime = null
-            this.dataForm.version = null
-          }
+          this.dataForm.exist = []
+          this.dataForm.newVersion = ''
         })
 
       },
-      versionHandleChange () {
+      // 获取版本号选择框
+      get_version_type () {
+        this.$http({
+          url: this.$http.adornUrl('/manager/versioninf/getAppOsVersionList'),
+          method: 'get',
+          data: this.$http.adornParams()
+        }).then(({data}) => {
+          let appOsVersionList = []
+          let applist = []
+          let oslist = []
+          let versionlist = []
 
+          data.appOsVersionList.forEach(function(appItem,index){
+            var tempApp = {}
+            tempApp.value =  Object.keys(appItem)[0]
+            tempApp.label = Object.keys(appItem)[0]
+            tempApp.children = [{},{}]
+            // android
+            tempApp.children[0].value = 'android'
+            tempApp.children[0].label = 'android'
+            let androidObj = appItem[tempApp.label][0]
+            if(androidObj.android.length){
+              var versionChildren = []
+              androidObj.android.forEach(function(versionItem,index){
+                var tempversion = {}
+                tempversion.value = versionItem
+                tempversion.label = versionItem
+                versionChildren.push(tempversion)
+              })
+              tempApp.children[0].children = versionChildren
+            }
+
+            tempApp.children[1].value = 'iphone'
+            tempApp.children[1].label = 'iphone'
+            let iphoneObj = appItem[tempApp.label][1]
+            if(iphoneObj.iphone.length){
+              var versionChildren = []
+              iphoneObj.iphone.forEach(function(versionItem,index){
+                var tempversion = {}
+                tempversion.value = versionItem
+                tempversion.label = versionItem
+                versionChildren.push(tempversion)
+              })
+              tempApp.children[1].children = versionChildren
+            }
+            appOsVersionList.push(tempApp)
+          })
+          this.versionOptions = appOsVersionList
+
+        })
+        .catch(() => {
+        })
+      },
+      versionHandleChange (value) {
+        console.log(value);
+        if(this.dataForm.exist.length < 3){
+          this.$message({
+            message: '请选择正确的版本号',
+            type: 'warning'
+          });
+          this.dataForm.exist = []
+        }
       },
       // 表单提交
       dataFormSubmit () {
@@ -151,15 +171,10 @@
               url: this.$http.adornUrl(`/manager/versioninf/copyasnew`),
               method: 'post',
               data: this.$http.adornData({
-                'createBy': this.dataForm.createBy,
-                'createTime': this.dataForm.createTime,
-                'id': this.dataForm.id,
-                'managerVersionId': this.dataForm.managerVersionId,
-                'os': this.newOS,
-                'remark': this.dataForm.remark,
-                'status': this.dataForm.status,
-                'updateTime': this.dataForm.updateTime,
-                'version': this.dataForm.version
+                'existApp': this.dataForm.exist[0],
+                'existOS': this.dataForm.exist[1],
+                'existVersion': this.dataForm.exist[2],
+                'newVersion': this.dataForm.newVersion,
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

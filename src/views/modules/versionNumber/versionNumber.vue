@@ -34,7 +34,7 @@
         <el-button v-if="isAuth('manager:versioninf:list')" type="primary" @click="search()">查询</el-button>
       </div></el-col>
 
-      <el-col :span="2"><div class="grid-content bg-purple">
+      <el-col :span="3"><div class="grid-content bg-purple">
         <el-button v-if="isAuth('manager:versioninf:save')" type="primary" @click="addOrUpdateHandle()">新增版本</el-button>
       </div></el-col>
 
@@ -55,6 +55,13 @@
         header-align="center"
         align="center"
         width="50">
+      </el-table-column>
+      <el-table-column
+        prop="app"
+        header-align="center"
+        align="center"
+        width="120"
+        label="App">
       </el-table-column>
       <el-table-column
         prop="version"
@@ -173,6 +180,7 @@
       },
       // 获取数据列表
       getDataList () {
+        let page = this.pageIndex.toString()
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/manager/versioninf/list'),
@@ -181,7 +189,7 @@
             'app': this.filter.app,
             'os': this.filter.os,
             'status': this.filter.status,
-            'page': '1',
+            'page': page,
             'limit': '10'
           })
         }).then(({data}) => {
