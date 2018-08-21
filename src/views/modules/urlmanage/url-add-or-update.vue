@@ -16,15 +16,26 @@
           </el-form-item>
         </div></el-col>
         <el-col :span="12"><div class="grid-content">
-          <el-form-item label="urlName" prop="urlName" label-width="100px">
-            <el-input
-              v-model="dataForm.urlName"
-              placeholder="urlName"
-              maxlength="64"
-              :disabled="dataForm.id == ''? false : true"></el-input>
+          <el-form-item label="系统选择" prop="os" label-width="100px">
+            <el-checkbox-group v-model="dataForm.os" >
+              <el-checkbox label="android" :disabled="androidStatus">Android</el-checkbox>
+              <el-checkbox label="iphone" :disabled="iosStatus">IOS</el-checkbox>
+            </el-checkbox-group>
           </el-form-item>
         </div></el-col>
       </el-row>
+
+      <el-form-item label="版本号" prop="version" label-width="100px">
+        <el-input v-model="dataForm.version" placeholder="2.4.3"></el-input>
+      </el-form-item>
+
+      <el-form-item label="urlName" prop="urlName" label-width="100px">
+        <el-input
+          v-model="dataForm.urlName"
+          placeholder="urlName"
+          maxlength="64"
+          :disabled="dataForm.id == ''? false : true"></el-input>
+      </el-form-item>
 
       <el-form-item label="url" prop="url" label-width="100px">
         <el-input
@@ -33,9 +44,7 @@
           @input="url_input"
           maxlength="64"></el-input>
       </el-form-item>
-      <el-form-item label="版本号" prop="version" label-width="100px">
-        <el-input v-model="dataForm.version" placeholder="2.4.3"></el-input>
-      </el-form-item>
+
       <el-form-item label="添加描述" prop="description" label-width="100px">
         <el-input
           v-model="dataForm.description"
@@ -140,12 +149,7 @@
       <el-form-item label="详情" prop="shareDetails" label-width="100px">
         <el-input v-model="dataForm.shareDetails" placeholder="0/50" maxlength="50"></el-input>
       </el-form-item>
-      <el-form-item label="系统选择" prop="os" label-width="100px">
-        <el-checkbox-group v-model="dataForm.os" >
-          <el-checkbox label="android" :disabled="androidStatus">Android</el-checkbox>
-          <el-checkbox label="iphone" :disabled="iosStatus">IOS</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
+
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -212,6 +216,7 @@
           app: '',
           urlName: '',
           url: '',
+          managerVersionInfoId: '',
           version: '',
           description: '',
           redFlag: '',
@@ -332,6 +337,7 @@
                 this.dataForm.urlName = data.url.urlName
                 this.dataForm.url = data.url.url
                 this.dataForm.version = data.url.version
+                this.dataForm.managerVersionInfoId = data.url.managerVersionInfoId
                 this.dataForm.description = data.url.description
                 this.dataForm.redFlag = data.url.redFlag
                 this.dataForm.adCode = data.url.adCode
@@ -371,6 +377,7 @@
             this.dataForm.app = ''
             this.dataForm.urlName = ''
             this.dataForm.url = ''
+            this.dataForm.managerVersionInfoId = ''
             this.dataForm.version = ''
             this.dataForm.description = ''
             this.dataForm.redFlag = ''
@@ -402,6 +409,7 @@
               'app': this.dataForm.app,
               'urlName': this.dataForm.urlName,
               'url': this.dataForm.url,
+              'managerVersionInfoId': this.dataForm.managerVersionInfoId,
               'version': this.dataForm.version,
               'description': this.dataForm.description,
               'redFlag': this.dataForm.redFlag,
@@ -461,6 +469,21 @@
           data: this.$http.adornParams()
         }).then(({data}) => {
           this.app_type = data.appList
+        })
+        .catch(() => {
+        })
+      },
+      // 获取版本号
+      get_version_type(app,os) {
+        this.$http({
+          url: this.$http.adornUrl('/manager/versioninf/getVersionList'),
+          method: 'post',
+          data: this.$http.adornData({
+            'app': app,
+            'os': os
+          })
+        }).then(({data}) => {
+          this.version_type = data.appVersionList
         })
         .catch(() => {
         })
