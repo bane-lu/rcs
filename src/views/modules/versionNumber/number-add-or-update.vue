@@ -36,6 +36,7 @@
 
       <el-form-item label="确认码" prop="commitKey">
         <el-input v-model="dataForm.commitKey"
+          type="password"
           placeholder="请输入确认码"
           maxlength="20"></el-input>
       </el-form-item>

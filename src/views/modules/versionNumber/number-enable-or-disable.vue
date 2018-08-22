@@ -20,6 +20,7 @@
     data () {
       return {
         visible: false,
+        type: null,
         dataForm: {
           id: null,
           commitKey: null,
@@ -33,44 +34,78 @@
       }
     },
     methods: {
-      init (row) {
+      init (row,type) {
         this.visible = true
         this.dataForm.id = row.id
         this.dataForm.commitKey = null
-        this.dataForm.status = row.status
-        if (row.status == '0') {
-          this.dataForm.paramStatus = '1'
-        } else {
-          this.dataForm.paramStatus = '0'
+        this.type = type
+        console.log(type);
+        if(type == 'forbidden'){
+          this.dataForm.status = row.status
+          if (row.status == '0') {
+            this.dataForm.paramStatus = '1'
+          } else {
+            this.dataForm.paramStatus = '0'
+          }
+        }else if(type == 'delete'){
         }
+
       },
       // 上下架
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            this.$http({
-              url: this.$http.adornUrl(`/manager/versioninf/publish`),
-              method: 'post',
-              data: this.$http.adornData({
-                'id': this.dataForm.id,
-                'commitKey': this.dataForm.commitKey,
-                'status': this.dataForm.paramStatus
-              })
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.$message({
-                  message: '操作成功',
-                  type: 'success',
-                  duration: 1500,
-                  onClose: () => {
-                    this.visible = false
-                    this.$emit('refreshDataList')
-                  }
+            console.log(this.type);
+            if(this.type == 'forbidden'){
+              this.$http({
+                url: this.$http.adornUrl(`/manager/versioninf/publish`),
+                method: 'post',
+                data: this.$http.adornData({
+                  'id': this.dataForm.id,
+                  'commitKey': this.dataForm.commitKey,
+                  'status': this.dataForm.paramStatus
                 })
-              } else {
-                this.$message.error(data.msg)
-              }
-            })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.$message({
+                    message: '操作成功',
+                    type: 'success',
+                    duration: 1500,
+                    onClose: () => {
+                      this.visible = false
+                      this.$emit('refreshDataList')
+                    }
+                  })
+                } else {
+                  this.$message.error(data.msg)
+                }
+              })
+
+            }else if(this.type == 'delete'){
+              this.$http({
+                url: this.$http.adornUrl(`/manager/versioninf/delete`),
+                method: 'post',
+                data: this.$http.adornData({
+                  'id': this.dataForm.id,
+                  'commitKey': this.dataForm.commitKey,
+                })
+              }).then(({data}) => {
+                if (data && data.code === 0) {
+                  this.$message({
+                    message: '删除成功',
+                    type: 'success',
+                    duration: 1500,
+                    onClose: () => {
+                      this.visible = false
+                      this.$emit('refreshDataList')
+                    }
+                  })
+                } else {
+                  this.$message.error(data.msg)
+                }
+              })
+            }
+
           }
         })
       }

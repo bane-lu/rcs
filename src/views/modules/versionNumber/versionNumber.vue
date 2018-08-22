@@ -1,6 +1,6 @@
 <template>
   <div class="version-number">
-    <el-row :gutter="20">
+    <el-row :gutter="30">
       <el-col :span="5"><div class="grid-content bg-purple">
         <label class="item_label">APP</label>
         <el-select v-model="filter.app" placeholder="请选择">
@@ -34,11 +34,11 @@
         <el-button v-if="isAuth('manager:versioninf:list')" type="primary" @click="search()">查询</el-button>
       </div></el-col>
 
-      <el-col :span="3"><div class="grid-content bg-purple">
+      <el-col :span="2"><div class="grid-content bg-purple">
         <el-button v-if="isAuth('manager:versioninf:save')" type="primary" @click="addOrUpdateHandle()">新增版本</el-button>
       </div></el-col>
 
-      <el-col :span="3"><div class="grid-content bg-purple">
+      <el-col :span="2"><div class="grid-content bg-purple">
         <el-button v-if="isAuth('manager:versioninf:copyasnew')" type="primary" @click="copyAddHandle()">复制新增</el-button>
       </div></el-col>
 
@@ -105,9 +105,9 @@
         width="300"
         label="操作">
         <template slot-scope="props">
-          <el-button v-if="isAuth('manager:versioninf:publish')" v-text="props.row.status == 1 ? '下架' : '上架'" :type="props.row.status == 1 ? 'success' : 'danger'" size="mini" @click="enableOrDisable(props.row)"></el-button>
+          <el-button v-if="isAuth('manager:versioninf:publish')" v-text="props.row.status == 1 ? '下架' : '上架'" :type="props.row.status == 1 ? 'success' : 'danger'" size="mini" @click="enableOrDisable(props.row,'forbidden')"></el-button>
           <el-button type="text" v-if="isAuth('manager:versioninf:update')" size="small" @click="addOrUpdateHandle(props.row)">编辑</el-button>
-          <el-button type="text" v-if="isAuth('manager:versioninf:delete')" size="small" @click="deleteHandle(props.row.id)">删除</el-button>
+          <el-button type="text" v-if="isAuth('manager:versioninf:delete')" size="small"  @click="enableOrDisable(props.row,'delete')">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -233,10 +233,10 @@
         })
       },
       // 上架 下架
-      enableOrDisable (row) {
+      enableOrDisable (row,type) {
         this.enableOrDisableVisible = true
         this.$nextTick(() => {
-          this.$refs.enableOrDisable.init(row)
+          this.$refs.enableOrDisable.init(row,type)
         })
       },
       // 删除
@@ -275,6 +275,18 @@
 
 <style lang="scss" type="text/scss" rel="stylesheet/scss" scoped>
   .version-number{
+    .grid-content{
+      padding: 10px 0px;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+    }
+    .item_label{
+      font-size: 14px;
+      padding: 0px 10px;
+      word-break:keep-all;
+      white-space:nowrap;
+    }
     .el-row {
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
