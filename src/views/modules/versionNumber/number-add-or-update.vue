@@ -5,8 +5,8 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
 
-      <el-form-item label="APP" prop="managerVersionId">
-        <el-select v-model="dataForm.app" placeholder="请选择" :disabled="isEditable">
+      <el-form-item label="APP" prop="appId">
+        <el-select v-model="dataForm.appId" placeholder="请选择" :disabled="isEditable">
           <el-option
             :label="item.app"
             :value="item.id"
@@ -34,7 +34,7 @@
         </el-checkbox-group>
       </el-form-item>
 
-      <el-form-item label="确认码" prop="commitKey">
+      <el-form-item label="确认码" prop="commitKey" v-if="isEditable">
         <el-input v-model="dataForm.commitKey"
           type="password"
           placeholder="请输入确认码"
@@ -74,7 +74,7 @@
         dataForm: {
           id: null,
           createBy: null,
-          managerVersionId: null,
+          appId: null,
           version: null,
           status: null,
           os: [],
@@ -84,7 +84,7 @@
           commitKey: null
         },
         dataRule: {
-          managerVersionId: [
+          appId: [
             { required: true, message: 'APP不能为空', trigger: 'blur' },
           ],
           version: [
@@ -123,8 +123,8 @@
             this.dataForm.createBy = row.createBy
             this.dataForm.createTime = row.createTime
             this.dataForm.id = row.id
-            this.dataForm.app = row.app
-            this.dataForm.managerVersionId = row.managerVersionId
+            // this.dataForm.app = row.app
+            this.dataForm.appId = row.managerVersionId
             this.dataForm.os.push(row.os)
             this.dataForm.remark = row.remark
             this.dataForm.status = row.status
@@ -136,7 +136,8 @@
             this.dataForm.createBy = null
             this.dataForm.createTime = null
             this.dataForm.id = null
-            this.dataForm.managerVersionId = null
+            // this.dataForm.app = null
+            this.dataForm.appId = null
             this.dataForm.os = []
             this.dataForm.remark = null
             this.dataForm.status = null
@@ -160,7 +161,7 @@
                 'createBy': this.dataForm.createBy,
                 'createTime': this.dataForm.createTime,
                 'id': this.dataForm.id,
-                'managerVersionId': this.dataForm.managerVersionId,
+                'managerVersionId': this.dataForm.appId,
                 'os': this.newOS,
                 'remark': this.dataForm.remark,
                 'status': this.dataForm.status,
