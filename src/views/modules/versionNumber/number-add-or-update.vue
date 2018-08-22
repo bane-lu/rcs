@@ -34,13 +34,6 @@
         </el-checkbox-group>
       </el-form-item>
 
-      <el-form-item label="确认码" prop="commitKey" v-if="isEditable">
-        <el-input v-model="dataForm.commitKey"
-          type="password"
-          placeholder="请输入确认码"
-          maxlength="20"></el-input>
-      </el-form-item>
-
     </el-form>
 
     <span slot="footer" class="dialog-footer">
@@ -80,8 +73,7 @@
           os: [],
           remark: null,
           createTime: null,
-          updateTime: null,
-          commitKey: null
+          updateTime: null
         },
         dataRule: {
           appId: [
@@ -93,9 +85,6 @@
           ],
           status: [
             { required: true, message: '状态不能为空', trigger: 'blur' }
-          ],
-          commitKey: [
-            { required: true, message: '确认码不能为空', trigger: 'blur' }
           ],
           os: [
             { required: true, message: '系统不能为空', trigger: 'blur' }
@@ -130,7 +119,6 @@
             this.dataForm.status = row.status
             this.dataForm.updateTime = row.updateTime
             this.dataForm.version = row.version
-            this.dataForm.commitKey = null
           }else {
             this.isEditable = false
             this.dataForm.createBy = null
@@ -143,7 +131,6 @@
             this.dataForm.status = null
             this.dataForm.updateTime = null
             this.dataForm.version = null
-            this.dataForm.commitKey = null
           }
         })
 
@@ -166,8 +153,7 @@
                 'remark': this.dataForm.remark,
                 'status': this.dataForm.status,
                 'updateTime': this.dataForm.updateTime,
-                'version': this.dataForm.version,
-                'commitKey': this.dataForm.commitKey
+                'version': this.dataForm.version
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
