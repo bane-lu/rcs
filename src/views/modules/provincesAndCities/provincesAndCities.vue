@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>活动总趋势</p>
+    <p>省市管理</p>
   </div>
 </template>
 

@@ -6,7 +6,7 @@
         <el-select v-model="filter.app" placeholder="请选择">
           <el-option
             :label="item.app"
-            :value="item.id"
+            :value="item.app"
             :key="index"
             v-for="(item,index) in app_type">{{item.app}}</el-option>
         </el-select>

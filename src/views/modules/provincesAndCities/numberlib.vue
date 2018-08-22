@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>活动详情</p>
+    <p>号码库管理</p>
   </div>
 </template>
 
