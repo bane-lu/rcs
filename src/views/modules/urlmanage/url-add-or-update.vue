@@ -304,9 +304,11 @@
     },
     watch: {
       app(){
+        this.dataForm.version = ''
         this.get_version_type(this.dataForm.app,this.newOS)
       },
       os(){
+        this.dataForm.version = ''
         this.get_version_type(this.dataForm.app,this.newOS)
       },
     },
