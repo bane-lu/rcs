@@ -5,13 +5,15 @@
       <el-col :span="5"><div class="grid-content bg-purple">
         <label class="item_label">号码段</label>
         <el-input
+          v-model="filter.sectionNumber"
           placeholder="请输入号码段"
           maxlength="7"></el-input>
       </div></el-col>
 
       <el-col :span="6"><div class="grid-content bg-purple">
         <label class="item_label">关联省</label>
-        <el-select placeholder="请选择">
+        <el-select placeholder="请选择"
+          v-model="filter.provinceId">
           <el-option label="请选择" value=""></el-option>
           <el-option label="android" value="android"></el-option>
           <el-option label="iphone" value="iphone"></el-option>
@@ -20,7 +22,8 @@
 
       <el-col :span="6"><div class="grid-content bg-purple">
         <label class="item_label">关联市</label>
-        <el-select placeholder="请选择">
+        <el-select placeholder="请选择"
+          v-model="filter.regionId">
           <el-option label="请选择" value=""></el-option>
           <el-option label="android" value="android"></el-option>
           <el-option label="iphone" value="iphone"></el-option>
@@ -28,7 +31,7 @@
       </div></el-col>
 
       <el-col :span="2"><div class="grid-content bg-purple">
-        <el-button type="primary">查找</el-button>
+        <el-button type="primary" @click="getDataList()">查找</el-button>
       </div></el-col>
 
       <el-col :span="2"><div class="grid-content bg-purple">
@@ -54,35 +57,38 @@
         width="100">
       </el-table-column>
       <el-table-column
-        prop="app"
+        prop="sectionNumber"
         header-align="center"
         align="center"
         width="120"
         label="号码段">
       </el-table-column>
       <el-table-column
-        prop="version"
+        prop="appType"
         header-align="center"
         align="center"
         width="120"
         label="关联版本">
       </el-table-column>
       <el-table-column
-        prop="os"
+        prop="regionEntity"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
         label="关联省份">
+        <template slot-scope="props">
+          <span v-text="props.row.regionEntity.provinceEntity.provinceName"></span>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="regionEntity"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
         label="关联市"
         width="250">
         <template slot-scope="props">
-          <span v-text="props.row.status == 1 ? '已上架' : '未上架'"></span>
+          <span v-text="props.row.regionEntity.regionName"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -116,16 +122,67 @@
   export default {
     data () {
       return {
-        addOrUpdateVisible: false
+        filter: {
+          sectionNumber: null,
+          provinceId: null,
+          regionId: null
+        },
+        dataList: [],
+        pageIndex: 1,
+        pageSize: 10,
+        totalPage: 0,
+        dataListLoading: false,
+        dataListSelections: [],
+        addOrUpdateVisible: false,
       }
     },
+    mounted(){
+      this.getDataList()
+    },
     methods:{
+      // 获取数据列表
+      getDataList () {
+        this.dataListLoading = true
+        this.$http({
+          url: this.$http.adornUrl(`/manager/sectionNumber/queryList/${this.pageIndex}/${this.pageSize}`),
+          method: 'post',
+          data: this.$http.adornData({
+            'sectionNumber': this.filter.sectionNumber,
+            'provinceId': this.filter.provinceId,
+            'regionId': this.filter.regionId,
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.dataList = data.data.sectionNumberList
+            // this.totalPage = data.page.totalCount
+          } else {
+            this.dataList = []
+            this.totalPage = 0
+          }
+          this.dataListLoading = false
+        })
+      },
       // 新增
       addOrUpdateHandle () {
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
           this.$refs.addOrUpdate.init()
         })
+      },
+      // 每页数
+      sizeChangeHandle (val) {
+        this.pageSize = val
+        this.pageIndex = 1
+        this.getDataList()
+      },
+      // 当前页
+      currentChangeHandle (val) {
+        this.pageIndex = val
+        this.getDataList()
+      },
+      // 多选
+      selectionChangeHandle (val) {
+        this.dataListSelections = val
       },
     },
     components: {

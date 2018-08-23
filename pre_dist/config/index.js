@@ -5,17 +5,15 @@
   window.SITE_CONFIG = {};
 
   // 域名
-  // window.SITE_CONFIG['basePath'] = 'http://221.176.34.113';
-  // window.SITE_CONFIG['basePath'] = 'http://192.168.185.250';
-  window.SITE_CONFIG['basePath'] = 'http://221.176.34.113';
-  // api接口请求地址
   // 测试环境
-  // window.SITE_CONFIG['baseUrl'] = window.SITE_CONFIG['basePath'] + ':8080/web-manager';
-  // window.SITE_CONFIG['baseUrl'] = window.SITE_CONFIG['basePath'] + ':10006/web-manager';
+  // window.SITE_CONFIG['basePath'] = 'http://221.176.34.113:8080';
+  // window.SITE_CONFIG['basePath'] = 'http://192.168.185.250:10006';
 
+  // 预发布
+  window.SITE_CONFIG['basePath'] = 'http://221.176.34.113:8761';
 
-  // 预生产
-  window.SITE_CONFIG['baseUrl'] = window.SITE_CONFIG['basePath'] + ':8761/web-manager';
+  // api接口请求地址
+  window.SITE_CONFIG['baseUrl'] = window.SITE_CONFIG['basePath'] + '/web-manager';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain']  = './'; // 域名
