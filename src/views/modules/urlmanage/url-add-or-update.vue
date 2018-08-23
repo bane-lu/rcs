@@ -26,7 +26,12 @@
       </el-row>
 
       <el-form-item label="版本号" prop="version" label-width="100px">
-        <el-input v-model="dataForm.version" placeholder="2.4.3"></el-input>
+        <el-select v-model="dataForm.version" placeholder="请先选择版本号和系统">
+          <el-option :label="item.version"
+            :value="item.version"
+            :key="index"
+            v-for="(item,index) in version_type">{{item.version}}</el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="urlName" prop="urlName" label-width="100px">
@@ -210,13 +215,14 @@
         visible: false,
         // 设置日期选择器不可输入文本
         isEditable: false,
+        version_type: [],
         dataForm: {
           createTime: '',
           id: '',
           app: '',
+          appId: '',
           urlName: '',
           url: '',
-          managerVersionInfoId: '',
           version: '',
           description: '',
           redFlag: '',
@@ -296,6 +302,14 @@
         }
       }
     },
+    watch: {
+      app(){
+        this.get_version_type(this.dataForm.app,this.newOS)
+      },
+      os(){
+        this.get_version_type(this.dataForm.app,this.newOS)
+      },
+    },
     computed: {
       newOS () {
         return this.dataForm.os.join(',')
@@ -306,10 +320,18 @@
         } else {
           return 0
         }
-      }
+      },
+      app(){
+        return this.dataForm.app;
+      },
+      os(){
+        return this.dataForm.os;
+      },
     },
     created () {
       this.get_app_type()
+    },
+    mounted () {
     },
     methods: {
       url_input () {
@@ -332,12 +354,13 @@
               method: 'get'
             }).then(({data}) => {
               if (data && data.code === 0) {
+                console.log(data.url);
                 this.dataForm.createTime = data.url.createTime
                 this.dataForm.app = data.url.app
+                this.dataForm.appId = data.url.managerVersionInfoId
                 this.dataForm.urlName = data.url.urlName
                 this.dataForm.url = data.url.url
                 this.dataForm.version = data.url.version
-                this.dataForm.managerVersionInfoId = data.url.managerVersionInfoId
                 this.dataForm.description = data.url.description
                 this.dataForm.redFlag = data.url.redFlag
                 this.dataForm.adCode = data.url.adCode
@@ -360,7 +383,6 @@
                 this.dataForm.shareDetails = data.url.shareDetails
                 this.dataForm.os = data.url.os.split(',')
                 let that = this
-                console.log(this.dataForm.os)
                 this.dataForm.os.forEach(function(item,index){
                   if (item == 'android') {
                     that.androidStatus = true
@@ -377,7 +399,7 @@
             this.dataForm.app = ''
             this.dataForm.urlName = ''
             this.dataForm.url = ''
-            this.dataForm.managerVersionInfoId = ''
+            this.dataForm.appId = ''
             this.dataForm.version = ''
             this.dataForm.description = ''
             this.dataForm.redFlag = ''
@@ -403,13 +425,23 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.on_submit_loading = true
+            var params
+            if(this.dataForm.id == ''){
+              var _this = this
+              this.app_type.forEach(function(appItem,index){
+                if(appItem.app == _this.dataForm.app){
+                  _this.dataForm.appId = appItem.id
+                }
+                console.log(_this.dataForm.appId);
+              })
+            }
             var params = {
               'createTime': this.dataForm.createTime,
               'id': this.dataForm.id,
               'app': this.dataForm.app,
               'urlName': this.dataForm.urlName,
               'url': this.dataForm.url,
-              'managerVersionInfoId': this.dataForm.managerVersionInfoId,
+              'managerVersionInfoId': this.dataForm.appId,
               'version': this.dataForm.version,
               'description': this.dataForm.description,
               'redFlag': this.dataForm.redFlag,
@@ -426,6 +458,8 @@
               'shareDetails': this.dataForm.shareDetails,
               'os': this.newOS
             }
+
+            // console.log(params);
             this.$http({
               url: this.$http.adornUrl(`/manager/url/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
