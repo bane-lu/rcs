@@ -7,7 +7,7 @@
       <el-row :gutter="30">
         <el-col :span="12"><div class="grid-content">
           <el-form-item label="app" prop="app" label-width="100px">
-            <el-select v-model="dataForm.app" placeholder="请选择" :disabled="dataForm.id == ''? false : true">
+            <el-select v-model="dataForm.app" @change="changeVersion" placeholder="请选择" :disabled="dataForm.id == ''? false : true">
               <el-option :label="item.app"
                 :value="item.app"
                 :key="index"
@@ -17,7 +17,7 @@
         </div></el-col>
         <el-col :span="12"><div class="grid-content">
           <el-form-item label="系统选择" prop="os" label-width="100px">
-            <el-checkbox-group v-model="dataForm.os" >
+            <el-checkbox-group v-model="dataForm.os" @change="changeVersion">
               <el-checkbox label="android" :disabled="androidStatus">Android</el-checkbox>
               <el-checkbox label="iphone" :disabled="iosStatus">IOS</el-checkbox>
             </el-checkbox-group>
@@ -210,6 +210,8 @@
         }
       }
       return {
+        // 判断第一次进来
+        enterStatus: false,
         app_type: [],
         on_submit_loading: false,
         visible: false,
@@ -303,14 +305,10 @@
       }
     },
     watch: {
-      app(){
-        this.dataForm.version = ''
-        this.get_version_type(this.dataForm.app,this.newOS)
-      },
-      os(){
-        this.dataForm.version = ''
-        this.get_version_type(this.dataForm.app,this.newOS)
-      },
+      // app(){
+      // },
+      // os(){
+      // },
     },
     computed: {
       newOS () {
@@ -323,21 +321,26 @@
           return 0
         }
       },
-      app(){
-        return this.dataForm.app;
-      },
-      os(){
-        return this.dataForm.os;
-      },
+      // app(){
+      //   return this.dataForm.app;
+      // },
+      // os(){
+      //   return this.dataForm.os;
+      // },
     },
     created () {
       this.get_app_type()
     },
     mounted () {
+      this.enterStatus = true
     },
     methods: {
       url_input () {
         this.dataForm.url = this.dataForm.url.replace(/\s+/g, '')
+      },
+      changeVersion () {
+        this.get_version_type(this.dataForm.app,this.newOS)
+        this.dataForm.version = ''
       },
       redDot_input () {
         // console.log(this.dataForm.redFlag)
@@ -356,7 +359,6 @@
               method: 'get'
             }).then(({data}) => {
               if (data && data.code === 0) {
-                console.log(data.url);
                 this.dataForm.createTime = data.url.createTime
                 this.dataForm.app = data.url.app
                 this.dataForm.appId = data.url.managerVersionInfoId
@@ -384,6 +386,7 @@
                 this.dataForm.shareContent = data.url.shareContent
                 this.dataForm.shareDetails = data.url.shareDetails
                 this.dataForm.os = data.url.os.split(',')
+                console.log(this.dataForm.version);
                 let that = this
                 this.dataForm.os.forEach(function(item,index){
                   if (item == 'android') {
