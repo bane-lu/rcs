@@ -353,6 +353,7 @@
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (row) {
+            this.get_version_type(row.app,row.os)
             this.dataForm.id = row.id
             this.$http({
               url: this.$http.adornUrl(`/manager/url/info/${this.dataForm.id}`),
@@ -399,6 +400,7 @@
             }).catch(() => {
             })
           } else {
+            this.get_version_type('','')
             this.dataForm.createTime = ''
             this.dataForm.id = ''
             this.dataForm.app = ''
