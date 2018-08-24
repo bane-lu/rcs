@@ -60,24 +60,18 @@
         visible: false,
         versionOptions: [],
         dataForm: {
-          exist: [],
+          exist: null,
           existVersion: '',
         	newVersion: null
         },
         dataRule: {
-          // managerVersionId: [
-          //   { required: true, message: 'APP不能为空', trigger: 'blur' },
-          // ],
-          // version: [
-          //   { required: true, message: '版本不能为空', trigger: 'blur' },
-          //   { validator: validateVersion, trigger: 'blur' }
-          // ],
-          // status: [
-          //   { required: true, message: '状态不能为空', trigger: 'blur' }
-          // ],
-          // os: [
-          //   { required: true, message: '系统不能为空', trigger: 'blur' }
-          // ]
+          existVersion: [
+            { required: true, message: '请选择需要复制的版本信息', trigger: 'blur' },
+          ],
+          newVersion: [
+            { required: true, message: '请输入新的版本号', trigger: 'blur' },
+            { validator: validateVersion, trigger: 'blur' }
+          ]
         }
       }
     },
@@ -160,12 +154,14 @@
             type: 'warning'
           });
           this.dataForm.exist = []
+        }else {
         }
       },
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            console.log(this.dataForm);
             this.on_submit_loading = true
             this.$http({
               url: this.$http.adornUrl(`/manager/versioninf/copyasnew`),

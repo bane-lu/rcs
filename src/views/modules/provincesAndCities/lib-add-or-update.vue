@@ -5,33 +5,26 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
 
-      <el-form-item label="APP" prop="appId">
-        <el-select v-model="dataForm.appId" placeholder="请选择" :disabled="isEditable">
-          <el-option
-            :label="item.app"
-            :value="item.id"
-            :key="index"
-            v-for="(item,index) in to_app_type">{{item.app}}</el-option>
+      <el-form-item label="号码段" prop="appId">
+        <el-input
+          placeholder="请输入号码段"
+          maxlength="7"></el-input>
+      </el-form-item>
+
+      <el-form-item label="关联省" prop="version">
+        <el-select placeholder="请选择">
+          <el-option label="请选择" value=""></el-option>
+          <el-option label="android" value="android"></el-option>
+          <el-option label="iphone" value="iphone"></el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="版本号" prop="version">
-        <el-input v-model="dataForm.version"
-          placeholder="请输入版本号"
-          maxlength="20"></el-input>
-      </el-form-item>
-
-      <el-form-item label="描述" prop="remark">
-        <el-input v-model="dataForm.remark"
-          placeholder="请输入相关描述"
-          maxlength="200"></el-input>
-      </el-form-item>
-
-      <el-form-item label="系统" prop="os">
-        <el-checkbox-group v-model="dataForm.os">
-          <el-checkbox label="android" :disabled="isEditable">android</el-checkbox>
-          <el-checkbox label="iphone" :disabled="isEditable">iphone</el-checkbox>
-        </el-checkbox-group>
+      <el-form-item label="关联市" prop="remark">
+        <el-select placeholder="请选择">
+          <el-option label="请选择" value=""></el-option>
+          <el-option label="android" value="android"></el-option>
+          <el-option label="iphone" value="iphone"></el-option>
+        </el-select>
       </el-form-item>
 
     </el-form>

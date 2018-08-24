@@ -34,7 +34,7 @@
         <el-button v-if="isAuth('manager:versioninf:list')" type="primary" @click="search()">查询</el-button>
       </div></el-col>
 
-      <el-col :span="2"><div class="grid-content bg-purple">
+      <el-col :span="3"><div class="grid-content bg-purple">
         <el-button v-if="isAuth('manager:versioninf:save')" type="primary" @click="addOrUpdateHandle()">新增版本</el-button>
       </div></el-col>
 
@@ -83,7 +83,7 @@
         align="center"
         :show-overflow-tooltip="true"
         label="状态"
-        width="250">
+        width="200">
         <template slot-scope="props">
           <span v-text="props.row.status == 1 ? '已上架' : '未上架'"></span>
         </template>
@@ -102,7 +102,7 @@
         fixed="right"
         header-align="center"
         align="center"
-        width="300"
+        width="280"
         label="操作">
         <template slot-scope="props">
           <el-button v-if="isAuth('manager:versioninf:publish')" v-text="props.row.status == 1 ? '下架' : '上架'" :type="props.row.status == 1 ? 'success' : 'danger'" size="mini" @click="enableOrDisable(props.row,'forbidden')"></el-button>
