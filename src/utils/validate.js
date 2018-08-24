@@ -105,7 +105,7 @@ export function compareTime (a, b, timeVal) {
 }
 
 /**
- * 仅7位号码段
+ * 仅号码段
  * @param {*} s
  */
 export function isNumberLib (s) {
