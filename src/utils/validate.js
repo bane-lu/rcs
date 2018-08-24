@@ -103,3 +103,11 @@ export function compareTime (a, b, timeVal) {
     return true
   }
 }
+
+/**
+ * 仅7位号码段
+ * @param {*} s
+ */
+export function isNumberLib (s) {
+  return /^([0-9])*$/.test(s)
+}

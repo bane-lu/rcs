@@ -13,20 +13,26 @@
       <el-col :span="6"><div class="grid-content bg-purple">
         <label class="item_label">关联省</label>
         <el-select placeholder="请选择"
-          v-model="filter.provinceId">
-          <el-option label="请选择" value=""></el-option>
-          <el-option label="android" value="android"></el-option>
-          <el-option label="iphone" value="iphone"></el-option>
+          v-model="filter.provinceId"
+          @change="changeProvince">
+          <el-option
+            :label="item.provinceName"
+            :value="item.id"
+            :key="index"
+            v-for="(item,index) in province_type">{{item.provinceName}}</el-option>
         </el-select>
       </div></el-col>
 
       <el-col :span="6"><div class="grid-content bg-purple">
         <label class="item_label">关联市</label>
         <el-select placeholder="请选择"
+          :disabled="!filter.provinceId"
           v-model="filter.regionId">
-          <el-option label="请选择" value=""></el-option>
-          <el-option label="android" value="android"></el-option>
-          <el-option label="iphone" value="iphone"></el-option>
+          <el-option
+            :label="item.regionName"
+            :value="item.id"
+            :key="index"
+            v-for="(item,index) in city_type">{{item.regionName}}</el-option>
         </el-select>
       </div></el-col>
 
@@ -35,7 +41,7 @@
       </div></el-col>
 
       <el-col :span="2"><div class="grid-content bg-purple">
-        <el-button type="primary">重置</el-button>
+        <el-button type="primary" @click="reset()">重置</el-button>
       </div></el-col>
 
       <el-col :span="3"><div class="grid-content bg-purple">
@@ -50,7 +56,8 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
-        type="1"
+        type="index"
+        :index="transforIndex"
         header-align="center"
         align="center"
         label="序号"
@@ -67,7 +74,7 @@
         prop="appType"
         header-align="center"
         align="center"
-        width="120"
+        width="200"
         label="关联版本">
       </el-table-column>
       <el-table-column
@@ -75,9 +82,10 @@
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
+        width="200"
         label="关联省份">
         <template slot-scope="props">
-          <span v-text="props.row.regionEntity.provinceEntity.provinceName"></span>
+          <span v-text="props.row.regionEntity.provinceEntity.provinceName == null ? '---' : props.row.regionEntity.provinceEntity.provinceName"></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -86,19 +94,19 @@
         align="center"
         :show-overflow-tooltip="true"
         label="关联市"
-        width="250">
+        width="200">
         <template slot-scope="props">
-          <span v-text="props.row.regionEntity.regionName"></span>
+          <span v-text="props.row.regionEntity.regionName == null ? '---' : props.row.regionEntity.regionName"></span>
         </template>
       </el-table-column>
       <el-table-column
-        prop="createBy"
+        prop="regionId"
         header-align="center"
         align="center"
-        label="操作"
-        width="150">
+        label="操作">
         <template slot-scope="props">
-          <span v-text="props.row.createBy == null ? '无' : props.row.createBy"></span>
+          <el-button type="primary" size="small" @click="addOrUpdateHandle(props.row)">修改</el-button>
+          <el-button type="danger" size="small" @click="deleteHandle(props.row)">删除</el-button>
         </template>
       </el-table-column>
       <!-- <el-table-column
@@ -113,7 +121,15 @@
         <!-- </template> -->
       <!-- </el-table-column> -->
     </el-table>
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate"></add-or-update>
+    <el-pagination
+      @size-change="sizeChangeHandle"
+      @current-change="currentChangeHandle"
+      :current-page="pageIndex"
+      :page-size="pageSize"
+      :total="totalPage"
+      layout="total, prev, pager, next">
+    </el-pagination>
+    <add-or-update v-if="addOrUpdateVisible" :to_app_type="app_type" :to_province_type="province_type" ref="addOrUpdate"></add-or-update>
   </div>
 </template>
 
@@ -122,6 +138,9 @@
   export default {
     data () {
       return {
+        province_type: [],
+        app_type: [],
+        city_type: [],
         filter: {
           sectionNumber: null,
           provinceId: null,
@@ -129,7 +148,7 @@
         },
         dataList: [],
         pageIndex: 1,
-        pageSize: 10,
+        pageSize: 8,
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
@@ -137,9 +156,61 @@
       }
     },
     mounted(){
+      this.get_app_type()
+      this.get_province_type()
       this.getDataList()
     },
     methods:{
+      transforIndex (index) {
+        return index + this.pageSize*(this.pageIndex - 1) + 1
+      },
+      // 获取app
+      get_app_type () {
+        this.$http({
+          url: this.$http.adornUrl('/manager/version/getList'),
+          method: 'get',
+          data: this.$http.adornParams()
+        }).then(({data}) => {
+          this.app_type = data.appList
+        })
+        .catch(() => {
+        })
+      },
+      // 获取省份
+      get_province_type () {
+        this.$http({
+          url: this.$http.adornUrl('/manager/province/queryAll'),
+          method: 'get',
+          data: this.$http.adornParams()
+        }).then(({data}) => {
+          this.province_type = data.data
+        })
+        .catch(() => {
+        })
+      },
+      changeProvince (value) {
+        this.get_city_type(value)
+        this.filter.regionId = null
+      },
+      // 获取市
+      get_city_type (province) {
+        var params = new FormData();
+        params.append('provinceId', province);//上传的文件： 键名，键值
+        this.$http({
+          url: this.$http.adornUrl(`/manager/region/queryByProvinceId?provinceId=${province}`),
+          method: 'get',
+          data: this.$http.adornParams()
+        }).then(({data}) => {
+          this.city_type = data.data
+        })
+        .catch(() => {
+        })
+      },
+      reset () {
+        Object.assign(this.$data, this.$options.data())
+        this.get_province_type()
+        this.getDataList()
+      },
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
@@ -154,7 +225,7 @@
         }).then(({data}) => {
           if (data && data.code === 0) {
             this.dataList = data.data.sectionNumberList
-            // this.totalPage = data.page.totalCount
+            this.totalPage = data.data.total
           } else {
             this.dataList = []
             this.totalPage = 0
@@ -163,10 +234,41 @@
         })
       },
       // 新增
-      addOrUpdateHandle () {
+      addOrUpdateHandle (row) {
         this.addOrUpdateVisible = true
         this.$nextTick(() => {
-          this.$refs.addOrUpdate.init()
+          this.$refs.addOrUpdate.init(row)
+        })
+      },
+      deleteHandle (row) {
+        var ids = row ? [row.id] : this.dataListSelections.map(item => {
+          return item.id
+        })
+        console.log(ids)
+        this.$confirm(`确定对[ id = ${ids.join(',')}]进行[${row ? '删除' : '批量删除'}]操作?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/manager/url/delete'),
+            method: 'post',
+            data: this.$http.adornData(ids, false)
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+        }).catch(({data}) => {
         })
       },
       // 每页数

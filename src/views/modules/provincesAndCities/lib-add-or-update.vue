@@ -5,25 +5,44 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
 
-      <el-form-item label="号码段" prop="appId">
+      <el-form-item label="号码段" prop="sectionNumber">
         <el-input
+          :disabled="!isEditable"
+          v-model="dataForm.sectionNumber"
           placeholder="请输入号码段"
           maxlength="7"></el-input>
       </el-form-item>
 
-      <el-form-item label="关联省" prop="version">
-        <el-select placeholder="请选择">
-          <el-option label="请选择" value=""></el-option>
-          <el-option label="android" value="android"></el-option>
-          <el-option label="iphone" value="iphone"></el-option>
+      <el-form-item label="关联省" prop="provinceId">
+        <el-select placeholder="请选择"
+          v-model="dataForm.provinceId"
+          @change="changeProvince">
+          <el-option
+            :label="item.provinceName"
+            :value="item.id"
+            :key="index"
+            v-for="(item,index) in to_province_type">{{item.provinceName}}</el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="关联市" prop="remark">
-        <el-select placeholder="请选择">
-          <el-option label="请选择" value=""></el-option>
-          <el-option label="android" value="android"></el-option>
-          <el-option label="iphone" value="iphone"></el-option>
+      <el-form-item label="关联市" prop="regionId">
+        <el-select placeholder="请选择"
+          v-model="dataForm.regionId">
+          <el-option
+            :label="item.regionName"
+            :value="item.id"
+            :key="index"
+            v-for="(item,index) in city_type">{{item.regionName}}</el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="appType" prop="appType">
+        <el-select v-model="dataForm.appType" placeholder="请选择">
+          <el-option
+            :label="item.app"
+            :value="item.app"
+            :key="index"
+            v-for="(item,index) in to_app_type">{{item.app}}</el-option>
         </el-select>
       </el-form-item>
 
@@ -37,17 +56,20 @@
 </template>
 
 <script>
-  import { isVersion } from '@/utils/validate'
+  import { isNumberLib } from '@/utils/validate'
   export default {
     props: {
       to_app_type: {
         type: Array
       },
+      to_province_type: {
+        type: Array
+      }
     },
     data () {
-      var validateVersion = (rule, value, callback) => {
-        if (!isVersion(value)) {
-          callback(new Error('版本号格式不正确'))
+      var validateNumber = (rule, value, callback) => {
+        if (!isNumberLib(value)) {
+          callback(new Error('号码段式不正确'))
         } else {
           callback()
         }
@@ -57,96 +79,90 @@
         on_submit_loading: false,
         visible: false,
         isEditable: true,
+        city_type: [],
         dataForm: {
           id: null,
-          createBy: null,
-          appId: null,
-          version: null,
-          status: null,
-          os: [],
-          remark: null,
-          createTime: null,
-          updateTime: null
+          sectionNumber: null,
+          provinceId: null,
+          regionId: null,
+          appType: null
         },
         dataRule: {
-          appId: [
-            { required: true, message: 'APP不能为空', trigger: 'blur' },
+          sectionNumber: [
+            { required: true, message: '号码段不能为空', trigger: 'blur' },
+            { validator: validateNumber, trigger: 'blur' }
           ],
-          version: [
-            { required: true, message: '版本不能为空', trigger: 'blur' },
-            { validator: validateVersion, trigger: 'blur' }
+          provinceId: [
+            { required: true, message: '省份不能为空', trigger: 'blur' },
           ],
-          status: [
-            { required: true, message: '状态不能为空', trigger: 'blur' }
+          regionId: [
+            { required: true, message: '市不能为空', trigger: 'blur' }
           ],
-          os: [
-            { required: true, message: '系统不能为空', trigger: 'blur' }
+          appType: [
+            { required: true, message: 'app不能为空', trigger: 'blur' }
           ]
         }
       }
     },
     computed: {
-      newOS () {
-        return this.dataForm.os.join(',')
-      },
     },
     mounted () {
     },
     methods: {
       init (row) {
         this.dataForm.id = null
-        row && (this.dataForm.id = row.id)
-
+        row && (this.dataForm.id = row.regionId)
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (row) {
-            this.isEditable = true
-            this.dataForm.createBy = row.createBy
-            this.dataForm.createTime = row.createTime
-            this.dataForm.id = row.id
-            // this.dataForm.app = row.app
-            this.dataForm.appId = row.managerVersionId
-            this.dataForm.os.push(row.os)
-            this.dataForm.remark = row.remark
-            this.dataForm.status = row.status
-            this.dataForm.updateTime = row.updateTime
-            this.dataForm.version = row.version
-          }else {
             this.isEditable = false
-            this.dataForm.createBy = null
-            this.dataForm.createTime = null
-            this.dataForm.id = null
-            // this.dataForm.app = null
-            this.dataForm.appId = null
-            this.dataForm.os = []
-            this.dataForm.remark = null
-            this.dataForm.status = null
-            this.dataForm.updateTime = null
-            this.dataForm.version = null
+            this.get_city_type(row.regionEntity.provinceId)
+            this.dataForm.sectionNumber = row.sectionNumber
+            this.dataForm.provinceId = row.regionEntity.provinceId
+            this.dataForm.regionId = row.regionId
+            this.dataForm.appType = row.appType
+          }else {
+            this.isEditable = true
+            this.dataForm.sectionNumber = null
+            this.dataForm.provinceId = null
+            this.dataForm.regionId = null
+            this.dataForm.appType = null
           }
         })
 
       },
+      changeProvince (value) {
+        this.get_city_type(value)
+        this.dataForm.regionId = null
+      },
+      // 获取市
+      get_city_type (province) {
+        var params = new FormData();
+        params.append('provinceId', province);//上传的文件： 键名，键值
+        this.$http({
+          url: this.$http.adornUrl(`/manager/region/queryByProvinceId?provinceId=${province}`),
+          method: 'get',
+          data: this.$http.adornParams()
+        }).then(({data}) => {
+          this.city_type = data.data
+        })
+        .catch(() => {
+        })
+      },
       // 表单提交
       dataFormSubmit () {
-        console.log(this.dataForm);
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.on_submit_loading = true
             this.$http({
-              url: this.$http.adornUrl(`/manager/versioninf/${!this.dataForm.id ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/manager/sectionNumber/${!this.dataForm.id ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'createBy': this.dataForm.createBy,
-                'createTime': this.dataForm.createTime,
-                'id': this.dataForm.id,
-                'managerVersionId': this.dataForm.appId,
-                'os': this.newOS,
-                'remark': this.dataForm.remark,
-                'status': this.dataForm.status,
-                'updateTime': this.dataForm.updateTime,
-                'version': this.dataForm.version
+                'sectionNumber': this.dataForm.sectionNumber,
+                'provinceId': this.dataForm.provinceId,
+                'regionId': this.dataForm.regionId,
+                'appType': this.dataForm.appType
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
