@@ -194,8 +194,6 @@
       },
       // 获取市
       get_city_type (province) {
-        var params = new FormData();
-        params.append('provinceId', province);//上传的文件： 键名，键值
         this.$http({
           url: this.$http.adornUrl(`/manager/region/queryByProvinceId?provinceId=${province}`),
           method: 'get',
@@ -241,19 +239,22 @@
         })
       },
       deleteHandle (row) {
-        var ids = row ? [row.id] : this.dataListSelections.map(item => {
-          return item.id
-        })
-        console.log(ids)
-        this.$confirm(`确定对[ id = ${ids.join(',')}]进行[${row ? '删除' : '批量删除'}]操作?`, '提示', {
+        var ids = row.sectionNumber
+        console.log(row.sectionNumber)
+        this.$confirm(`确定对该条数据进行删除操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          var params = {
+            'sectionNumber': ids
+          }
           this.$http({
-            url: this.$http.adornUrl('/manager/url/delete'),
+            url: this.$http.adornUrl('/manager/sectionNumber/delete'),
             method: 'post',
-            data: this.$http.adornData(ids, false)
+            data: this.$http.adornData({
+              'sectionNumber': ids
+            })
           }).then(({data}) => {
             if (data && data.code === 0) {
               this.$message({
