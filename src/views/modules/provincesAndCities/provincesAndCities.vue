@@ -29,26 +29,27 @@
       <el-table-column
         header-align="center"
         align="center"
-        width="50"
+        width="100"
         type="index"
+        :index="transforIndex"
         label="序号">
       </el-table-column>
       <el-table-column
-        prop="province"
+        prop="provinceName"
         header-align="center"
         align="center"
         width="190"
         label="省份">
       </el-table-column>
       <el-table-column
-        prop="city"
+        prop="regionName"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
         label="市">
       </el-table-column>
       <el-table-column
-        prop="version"
+        prop="appType"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
@@ -61,7 +62,7 @@
         label="操作">
         <template slot-scope="props">
           <el-button type="success" size="small" @click="change(props.row)">修改</el-button>
-          <el-button type="danger" @click="deleteHandle(props.row)" size="small">删除</el-button>
+          <el-button type="danger" @click="deleteHandle(props.row,props.index,dataList)" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,6 +77,10 @@
     <!--创建省/市弹窗-->
     <create-pro-and-city v-if="showDialog"
                            :title="title"
+                           :provinceList = "provinceList"
+                           :versionList = "versionList"
+                           :formData = "formData"
+                           @emitQuery = "onQuery"
                            ref="createProAndCity"></create-pro-and-city>
   </div>
 </template>
@@ -89,18 +94,8 @@
         title: '创建',
         pageSize: 10,
         pageIndex: 1,
-        totalPage: 11,
-        dataList: [{
-          number: '1',
-          province: '广东',
-          city: '上海',
-          version: '12'
-        }, {
-          number: '2',
-          province: '广东',
-          city: '上海',
-          version: '12'
-        }],
+        totalPage: 0,
+        dataList: [],
         loading: false,
         formInline: {
           province: '',
@@ -110,7 +105,8 @@
         provinceList: [],
         cityList: [],
         versionList: [],
-        showDialog: false
+        showDialog: false,
+        formData: {}
       }
     },
     watch: {
@@ -129,55 +125,86 @@
     },
     methods: {
       onQuery () {
+        this.loading = true
         this.$http({
           url: this.$http.adornUrl('/manager/region/list'),
           method: 'post',
-          params: {
+          data: {
             appType: this.formInline.version,
             regionName: this.formInline.city,
             provinceName: this.formInline.province,
-            limit: '10',
-            page: '1'
+            limit: JSON.stringify(this.pageSize),
+            page: JSON.stringify(this.pageIndex)
           }
         }).then(({data}) => {
+          this.loading = false
           if (data && data.code === 0) {
-            console.log(data)
+            this.totalPage = data.page.totalCount
             this.dataList = data.page.list
           } else {
             this.$message.error('查询数据出错')
           }
         }).catch(({data}) => {
+          this.loading = false
           this.$message.error('查询数据出错')
         })
       },
       onReset () {
+        this.loading = true
+        this.formInline = {
+          province: '',
+          city: '',
+          version: ''
+        }
+        this.pageIndex = 1
+        this.$http({
+          url: this.$http.adornUrl('/manager/region/list'),
+          method: 'post',
+          data: {
+            appType: this.formInline.version,
+            regionName: this.formInline.city,
+            provinceName: this.formInline.province,
+            limit: JSON.stringify(this.pageSize),
+            page: JSON.stringify(this.pageIndex)
+          }
+        }).then(({data}) => {
+          this.loading = false
+          if (data && data.code === 0) {
+            this.totalPage = data.page.totalCount
+            this.dataList = data.page.list
+          } else {
+            this.$message.error('查询数据出错')
+          }
+        }).catch(({data}) => {
+          this.loading = false
+          this.$message.error('查询数据出错')
+        })
       },
       onCreate () {
         this.title = '创建'
         this.showDialog = true
+        // 使用nexttick触发子组件的方法，不然点击按钮第二次就没有弹窗
         this.$nextTick(() => {
           this.$refs.createProAndCity.init()
         })
+      },
+      transforIndex (index) {
+        return index + this.pageSize * (this.pageIndex - 1) + 1
       },
       sizeChangeHandle () {
         console.log('test')
       },
       currentChangeHandle (val) {
         this.pageIndex = val
-        this.getDataList()
-        console.log('test')
+        this.onQuery()
       },
-      deleteHandle (row) {
-        console.log(row.city)
+      deleteHandle (row, index, list) {
         this.$confirm('确定删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          this.deleteReq(row, index, list)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -185,9 +212,32 @@
           })
         })
       },
+      deleteReq (row, index, list) {
+        this.$http({
+          url: this.$http.adornUrl('/manager/region/delete'),
+          method: 'post',
+          data: {
+            regionName: row.regionName,
+            provinceName: row.provinceName
+          }
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message.success('删除成功')
+            list.splice(index, 1)
+          } else {
+            this.$message.error('删除失败')
+          }
+        }).catch(({data}) => {
+          this.$message.error('删除失败')
+        })
+      },
       change (row) {
         this.title = '修改'
+        this.formData.version = row.appType
+        this.formData.city = row.regionName
+        this.formData.province = row.provinceName
         this.showDialog = true
+        // 使用nexttick触发子组件的方法，不然点击按钮第二次就没有弹窗
         this.$nextTick(() => {
           this.$refs.createProAndCity.init()
         })
@@ -220,13 +270,12 @@
           .catch(() => {
             this.$message.error('获取版本列表出错')
           })
-      },
-      getDataList () {
       }
     },
     created () {
       this.getProvinces()
       this.get_app_type()
+      this.onQuery()
     }
   }
 </script>
