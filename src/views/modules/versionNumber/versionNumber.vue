@@ -15,7 +15,6 @@
       <el-col :span="5"><div class="grid-content bg-purple">
         <label class="item_label">OS</label>
         <el-select v-model="filter.os" placeholder="请选择">
-          <el-option label="请选择" value=""></el-option>
           <el-option label="android" value="android"></el-option>
           <el-option label="iphone" value="iphone"></el-option>
         </el-select>

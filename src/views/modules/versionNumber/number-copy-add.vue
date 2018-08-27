@@ -35,7 +35,6 @@
 
       <el-form-item label="" prop="newOS">
         <el-select v-model="dataForm.newOS" placeholder="请选择新的系统">
-          <el-option label="请选择" value=""></el-option>
           <el-option label="android" value="android"></el-option>
           <el-option label="iphone" value="iphone"></el-option>
         </el-select>
