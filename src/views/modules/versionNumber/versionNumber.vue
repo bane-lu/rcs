@@ -121,7 +121,7 @@
     </el-pagination>
     <!-- 弹窗: 新增 / 复制新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" :to_app_type="app_type" @refreshDataList="getDataList" ></add-or-update>
-    <copy-add v-if="copyAddVisible" ref="copyAdd" @refreshDataList="getDataList" ></copy-add>
+    <copy-add v-if="copyAddVisible" ref="copyAdd" :to_app_type="app_type" @refreshDataList="getDataList" ></copy-add>
     <enable-or-disable v-if="enableOrDisableVisible" ref="enableOrDisable" @refreshDataList="getDataList"></enable-or-disable>
   </div>
 </template>

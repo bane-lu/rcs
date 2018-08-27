@@ -256,8 +256,8 @@
             { validator: validateUrlname, trigger: 'blur' }
           ],
           url: [
-            { required: true, message: '请输入url地址不能为空', trigger: 'blur' },
-            { validator: validateUrladdress, trigger: 'blur' }
+            { required: false, message: '请输入url地址不能为空', trigger: 'blur' },
+            // { validator: validateUrladdress, trigger: 'blur' }
           ],
           version: [
             { required: true, message: '请输入版本号', trigger: 'blur' },

@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    class="lib-add-update"
     :title="!dataForm.id ? '新增' : '编辑'"
     :close-on-click-modal="false"
     :visible.sync="visible">
@@ -154,7 +155,7 @@
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            
+
             this.on_submit_loading = true
             this.$http({
               url: this.$http.adornUrl(`/manager/sectionNumber/${!this.dataForm.id ? 'save' : 'update'}`),
@@ -190,3 +191,12 @@
     }
   }
 </script>
+<style lang="scss" type="text/scss" rel="stylesheet/scss" scoped>
+.lib-add-update{
+  .el-select {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+  }
+}
+</style>
