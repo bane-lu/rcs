@@ -6,7 +6,7 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
       <el-form-item label="☆">
-        <span class="title">请选择您要复制的版本号信息</span>
+        <span class="title">请选择您要复制的已有版本信息</span>
       </el-form-item>
 
       <el-form-item label=""
@@ -20,12 +20,30 @@
       </el-form-item>
 
       <el-form-item label="☆">
-        <span class="title">请输入您要创建的版本号</span>
+        <span class="title">请选择输入您要新增的版本信息</span>
+      </el-form-item>
+
+      <el-form-item label="" prop="newApp">
+        <el-select v-model="dataForm.newApp" placeholder="请选择新的APP">
+          <el-option
+            :label="item.app"
+            :value="item.app"
+            :key="index"
+            v-for="(item,index) in to_app_type">{{item.app}}</el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="" prop="newOS">
+        <el-select v-model="dataForm.newOS" placeholder="请选择新的系统">
+          <el-option label="请选择" value=""></el-option>
+          <el-option label="android" value="android"></el-option>
+          <el-option label="iphone" value="iphone"></el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="" prop="newVersion">
         <el-input v-model="dataForm.newVersion"
-          placeholder="新的版本号"
+          placeholder="请输入新的版本号"
           maxlength="20"></el-input>
       </el-form-item>
 
@@ -62,23 +80,26 @@
         dataForm: {
           exist: null,
           existVersion: '',
-        	newVersion: null
+        	newVersion: null,
+          newApp: null,
+          newOS: null
         },
         dataRule: {
-          existVersion: [
+          exist: [
             { required: true, message: '请选择需要复制的版本信息', trigger: 'blur' },
           ],
           newVersion: [
             { required: true, message: '请输入新的版本号', trigger: 'blur' },
             { validator: validateVersion, trigger: 'blur' }
-          ]
+          ],
+          newApp: [
+            { required: true, message: '请选择新的APP', trigger: 'blur' },
+          ],
+          newOS: [
+            { required: true, message: '请选择新的系统', trigger: 'blur' },
+          ],
         }
       }
-    },
-    computed: {
-      newOS () {
-        return this.dataForm.os.join(',')
-      },
     },
     mounted () {
     },
@@ -90,6 +111,8 @@
           this.$refs['dataForm'].resetFields()
           this.dataForm.exist = []
           this.dataForm.newVersion = ''
+          this.dataForm.newApp = ''
+          this.dataForm.newOS = ''
         })
 
       },
@@ -171,6 +194,8 @@
                 'existOS': this.dataForm.exist[1],
                 'existVersion': this.dataForm.exist[2],
                 'newVersion': this.dataForm.newVersion,
+                'newApp': this.dataForm.newApp,
+                'newOS': this.dataForm.newOS,
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -205,6 +230,11 @@
       position: relative;
       font-size: 18px;
       color: #999;
+    }
+    .el-select {
+      width: 100%;
+      display: inline-block;
+      position: relative;
     }
   }
 
