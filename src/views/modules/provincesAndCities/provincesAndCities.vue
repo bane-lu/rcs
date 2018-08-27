@@ -38,7 +38,6 @@
         prop="provinceName"
         header-align="center"
         align="center"
-        width="190"
         label="省份">
       </el-table-column>
       <el-table-column
