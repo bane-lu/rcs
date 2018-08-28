@@ -205,7 +205,18 @@
         })
       },
       reset () {
-        Object.assign(this.$data, this.$options.data())
+        this.filter.sectionNumber = null
+        this.filter.provinceId = null
+        this.filter.regionId = null
+        this.dataList = null
+        this.pageIndex = 1
+        this.pageSize = 8
+        this.totalPage = 0
+
+        this.dataListLoading = false
+        this.dataListSelections = []
+        this.addOrUpdateVisible = false
+
         this.get_province_type()
         this.getDataList()
       },
