@@ -129,7 +129,7 @@
       :total="totalPage"
       layout="total, prev, pager, next">
     </el-pagination>
-    <add-or-update v-if="addOrUpdateVisible" :to_app_type="app_type" :to_province_type="province_type" ref="addOrUpdate"></add-or-update>
+    <add-or-update v-if="addOrUpdateVisible" :to_app_type="app_type" :to_province_type="province_type" ref="addOrUpdate"  @refreshDataList="getDataList"></add-or-update>
   </div>
 </template>
 
