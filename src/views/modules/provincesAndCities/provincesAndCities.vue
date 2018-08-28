@@ -17,7 +17,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onQuery">查询</el-button>
+        <el-button type="primary" @click="onQuery($event)">查询</el-button>
         <el-button type="info" @click="onReset">重置</el-button>
         <el-button type="primary" @click="onCreate">创建省/市</el-button>
       </el-form-item>
@@ -123,7 +123,10 @@
       CreateProAndCity
     },
     methods: {
-      onQuery () {
+      onQuery (ev) {
+        if (ev) {
+          this.pageIndex = 1
+        }
         this.loading = true
         this.$http({
           url: this.$http.adornUrl('/manager/region/list'),
@@ -189,9 +192,6 @@
       },
       onChange () {
         this.pageIndex = 1
-        setTimeout(() => {
-          this.onQuery()
-        }, 1)
       },
       transforIndex (index) {
         return index + this.pageSize * (this.pageIndex - 1) + 1
