@@ -11,7 +11,7 @@
           :disabled="!isEditable"
           v-model="dataForm.sectionNumber"
           placeholder="请输入号码段"
-          maxlength="7"></el-input>
+          maxlength="11"></el-input>
       </el-form-item>
 
       <el-form-item label="关联省" prop="provinceId">

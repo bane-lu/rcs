@@ -7,7 +7,7 @@
         <el-input
           v-model="filter.sectionNumber"
           placeholder="请输入号码段"
-          maxlength="7"></el-input>
+          maxlength="11"></el-input>
       </div></el-col>
 
       <el-col :span="6"><div class="grid-content bg-purple">
