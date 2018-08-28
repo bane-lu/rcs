@@ -5,12 +5,12 @@
     class="createDialog">
     <el-form :model="formInline" :rules="rules" ref="ruleForm" label-width="100px">
       <el-form-item label="省份" prop="province">
-        <el-select v-model="formInline.province" @change="inputChange(formInline, formInline.province, $event)" placeholder="请选择" class="el-col-18">
+        <el-select v-model="formInline.province" @change="inputChange(formInline, formInline.province, $event)" placeholder="请选择" class="el-col-18" :disabled="disabled">
           <el-option v-for="(item , index) in provinceList" :label="item" :value="item" :key="index"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="市" prop="city">
-        <el-select v-model="formInline.city" @change="inputChange(formInline, formInline.city, $event)" placeholder="请选择" class="el-col-18">
+        <el-select v-model="formInline.city" @change="inputChange(formInline, formInline.city, $event)" placeholder="请选择" class="el-col-18" :disabled="disabled">
           <el-option v-for="(item , index) in cityList" :label="item.name" :value="item.name" :key="index"></el-option>
         </el-select>
       </el-form-item>
@@ -50,7 +50,8 @@
               { required: true, message: '请选择版本', trigger: 'change' }
           ]
         },
-        isFirst: true   // 判断城市选项框数据显示的问题
+        isFirst: true,   // 判断城市选项框数据显示的问题
+        disabled: false
       }
     },
     props: ['title', 'provinceList', 'versionList', 'formData'],
@@ -151,16 +152,17 @@
       init () {
         this.visible = true
         this.resetForm('ruleForm')
-        if (this.title == '创建') {
-          this.formInline = {}
-        } else {
+        this.formInline = {
+          province: '',
+          city: '',
+          version: ''
+        }
+        if (this.title == '修改') {
           this.isFirst = true
-          this.formInline = {
-            province: '',
-            city: '',
-            version: ''
-          }
+          this.disabled = true
           this.formInline = Object.assign(this.formInline, this.formData)
+        } else {
+          this.disabled = false
         }
       }
     },

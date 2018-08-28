@@ -2,17 +2,17 @@
   <div v-loading="loading">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="省份">
-        <el-select v-model="formInline.province" placeholder="请选择">
+        <el-select v-model="formInline.province" @change="onChange" placeholder="请选择">
           <el-option v-for="(item , index) in provinceList" :label="item" :value="item" :key="index"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="市">
-        <el-select v-model="formInline.city" placeholder="请选择">
+        <el-select v-model="formInline.city" @change="onChange" placeholder="请选择">
           <el-option v-for="(item , index) in cityList" :label="item.name" :value="item.name" :key="index"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="版本">
-        <el-select v-model="formInline.version" placeholder="请选择">
+        <el-select v-model="formInline.version" @change="onChange" placeholder="请选择">
           <el-option v-for="(item , index) in versionList" :label="item.app" :value="item.app" :key="index"></el-option>
         </el-select>
       </el-form-item>
@@ -186,6 +186,12 @@
         this.$nextTick(() => {
           this.$refs.createProAndCity.init()
         })
+      },
+      onChange () {
+        this.pageIndex = 1
+        setTimeout(() => {
+          this.onQuery()
+        }, 1)
       },
       transforIndex (index) {
         return index + this.pageSize * (this.pageIndex - 1) + 1
