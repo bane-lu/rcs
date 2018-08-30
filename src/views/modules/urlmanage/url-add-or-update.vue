@@ -47,7 +47,7 @@
           v-model="dataForm.url"
           placeholder="请输入url"
           @input="url_input"
-          maxlength="64"></el-input>
+          maxlength="256"></el-input>
       </el-form-item>
 
       <el-form-item label="添加描述" prop="description" label-width="100px">
