@@ -20,18 +20,18 @@
           @change="changeProvince">
           <el-option
             :label="item.provinceName"
-            :value="item.id"
+            :value="item.provinceId"
             :key="index"
             v-for="(item,index) in to_province_type">{{item.provinceName}}</el-option>
         </el-select>
       </el-form-item>
 
-      <el-form-item label="关联市" prop="regionId">
+      <el-form-item label="关联市" prop="regionCode">
         <el-select placeholder="请选择"
-          v-model="dataForm.regionId">
+          v-model="dataForm.regionCode">
           <el-option
             :label="item.regionName"
-            :value="item.id"
+            :value="item.regionCode"
             :key="index"
             v-for="(item,index) in city_type">{{item.regionName}}</el-option>
         </el-select>
@@ -85,7 +85,7 @@
           id: null,
           sectionNumber: null,
           provinceId: null,
-          regionId: null,
+          regionCode: null,
           appType: null
         },
         dataRule: {
@@ -96,7 +96,7 @@
           provinceId: [
             { required: true, message: '省份不能为空', trigger: 'blur' },
           ],
-          regionId: [
+          regionCode: [
             { required: true, message: '市不能为空', trigger: 'blur' }
           ],
           appType: [
@@ -112,7 +112,7 @@
     methods: {
       init (row) {
         this.dataForm.id = null
-        row && (this.dataForm.id = row.regionId)
+        row && (this.dataForm.id = row.regionCode)
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
@@ -121,13 +121,13 @@
             this.get_city_type(row.regionEntity.provinceId)
             this.dataForm.sectionNumber = row.sectionNumber
             this.dataForm.provinceId = row.regionEntity.provinceId
-            this.dataForm.regionId = row.regionId
+            this.dataForm.regionCode = row.regionCode
             this.dataForm.appType = row.appType
           }else {
             this.isEditable = true
             this.dataForm.sectionNumber = null
             this.dataForm.provinceId = null
-            this.dataForm.regionId = null
+            this.dataForm.regionCode = null
             this.dataForm.appType = null
           }
         })
@@ -135,7 +135,7 @@
       },
       changeProvince (value) {
         this.get_city_type(value)
-        this.dataForm.regionId = null
+        this.dataForm.regionCode = null
       },
       // 获取市
       get_city_type (province) {
@@ -163,7 +163,7 @@
               data: this.$http.adornData({
                 'sectionNumber': this.dataForm.sectionNumber,
                 'provinceId': this.dataForm.provinceId,
-                'regionId': this.dataForm.regionId,
+                'regionCode': this.dataForm.regionCode,
                 'appType': this.dataForm.appType
               })
             }).then(({data}) => {

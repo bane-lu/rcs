@@ -17,7 +17,7 @@
           @change="changeProvince">
           <el-option
             :label="item.provinceName"
-            :value="item.id"
+            :value="item.provinceId"
             :key="index"
             v-for="(item,index) in province_type">{{item.provinceName}}</el-option>
         </el-select>
@@ -27,10 +27,10 @@
         <label class="item_label">关联市</label>
         <el-select placeholder="请选择"
           :disabled="!filter.provinceId"
-          v-model="filter.regionId">
+          v-model="filter.regionCode">
           <el-option
             :label="item.regionName"
-            :value="item.id"
+            :value="item.regionCode"
             :key="index"
             v-for="(item,index) in city_type">{{item.regionName}}</el-option>
         </el-select>
@@ -100,7 +100,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="regionId"
+        prop="regionCode"
         header-align="center"
         align="center"
         label="操作">
@@ -144,7 +144,7 @@
         filter: {
           sectionNumber: null,
           provinceId: null,
-          regionId: null
+          regionCode: null
         },
         dataList: [],
         pageIndex: 1,
@@ -190,7 +190,7 @@
       },
       changeProvince (value) {
         this.get_city_type(value)
-        this.filter.regionId = null
+        this.filter.regionCode = null
       },
       // 获取市
       get_city_type (province) {
@@ -207,7 +207,7 @@
       reset () {
         this.filter.sectionNumber = null
         this.filter.provinceId = null
-        this.filter.regionId = null
+        this.filter.regionCode = null
         this.dataList = null
         this.pageIndex = 1
         this.pageSize = 8
@@ -229,7 +229,7 @@
           data: this.$http.adornData({
             'sectionNumber': this.filter.sectionNumber,
             'provinceId': this.filter.provinceId,
-            'regionId': this.filter.regionId,
+            'regionCode': this.filter.regionCode,
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
