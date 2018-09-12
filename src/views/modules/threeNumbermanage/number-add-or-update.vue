@@ -1,0 +1,182 @@
+<template>
+  <el-dialog
+    class="lib-add-update"
+    :title="!dataForm.id ? '新增' : '编辑'"
+    :close-on-click-modal="false"
+    :visible.sync="visible">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+
+      <el-form-item label="前三位号段" prop="sectionNumber">
+        <el-input
+          :disabled="!isEditable"
+          v-model="dataForm.sectionNumber"
+          placeholder="请输入号段"
+          maxlength="11"></el-input>
+      </el-form-item>
+
+      <el-form-item label="运营商" prop="provinceId">
+        <el-checkbox-group v-model="dataForm.sectionNumber">
+          <el-checkbox label="中国移动"></el-checkbox>
+          <el-checkbox label="中国联通"></el-checkbox>
+          <el-checkbox label="中国电信"></el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+    </el-form>
+
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" @click="dataFormSubmit()" :loading="on_submit_loading">确定</el-button>
+    </span>
+  </el-dialog>
+</template>
+
+<script>
+  import { isNumberLib } from '@/utils/validate'
+  export default {
+    props: {
+      to_app_type: {
+        type: Array
+      },
+      to_province_type: {
+        type: Array
+      }
+    },
+    data () {
+      var validateNumber = (rule, value, callback) => {
+        if (!isNumberLib(value)) {
+          callback(new Error('号码段式不正确'))
+        } else {
+          callback()
+        }
+      }
+
+      return {
+        on_submit_loading: false,
+        visible: false,
+        isEditable: true,
+        city_type: [],
+        dataForm: {
+          id: null,
+          sectionNumber: null,
+          provinceId: null,
+          regionCode: null,
+          appType: null
+        },
+        dataRule: {
+          sectionNumber: [
+            { required: true, message: '号码段不能为空', trigger: 'blur' },
+            { validator: validateNumber, trigger: 'blur' }
+          ],
+          provinceId: [
+            { required: true, message: '省份不能为空', trigger: 'blur' },
+          ],
+          regionCode: [
+            { required: true, message: '市不能为空', trigger: 'blur' }
+          ],
+          appType: [
+            { required: true, message: 'app不能为空', trigger: 'blur' }
+          ]
+        }
+      }
+    },
+    computed: {
+    },
+    mounted () {
+    },
+    methods: {
+      init (row) {
+        this.dataForm.id = null
+        row && (this.dataForm.id = row.regionCode)
+        this.visible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].resetFields()
+          if (row) {
+            this.isEditable = false
+            this.get_city_type(row.regionEntity.provinceId)
+            this.dataForm.sectionNumber = row.sectionNumber
+            this.dataForm.provinceId = row.regionEntity.provinceId
+            this.dataForm.regionCode = row.regionCode
+            this.dataForm.appType = row.appType
+          }else {
+            this.isEditable = true
+            this.dataForm.sectionNumber = null
+            this.dataForm.provinceId = null
+            this.dataForm.regionCode = null
+            this.dataForm.appType = null
+          }
+        })
+
+      },
+      changeProvince (value) {
+        this.get_city_type(value)
+        this.dataForm.regionCode = null
+      },
+      // 获取市
+      get_city_type (province) {
+        var params = new FormData();
+        params.append('provinceId', province);//上传的文件： 键名，键值
+        this.$http({
+          url: this.$http.adornUrl(`/manager/region/queryByProvinceId?provinceId=${province}`),
+          method: 'get',
+          data: this.$http.adornParams()
+        }).then(({data}) => {
+          this.city_type = data.data
+        })
+        .catch(() => {
+        })
+      },
+      // 表单提交
+      dataFormSubmit () {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+
+            this.on_submit_loading = true
+            this.$http({
+              url: this.$http.adornUrl(`/manager/sectionNumber/${!this.dataForm.id ? 'save' : 'update'}`),
+              method: 'post',
+              data: this.$http.adornData({
+                'sectionNumber': this.dataForm.sectionNumber,
+                'provinceId': this.dataForm.provinceId,
+                'regionCode': this.dataForm.regionCode,
+                'appType': this.dataForm.appType
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.visible = false
+                    this.on_submit_loading = false
+                    this.$emit('refreshDataList')
+                  }
+                })
+              } else {
+                this.$message.error(data.msg)
+                this.on_submit_loading = false
+              }
+            }).catch(() => {
+              this.on_submit_loading = false
+            })
+          }
+        })
+      }
+    }
+  }
+</script>
+<style lang="scss" type="text/scss" rel="stylesheet/scss">
+.lib-add-update{
+  .el-select {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+  }
+  .el-form-item__content{
+    margin-left: 140px!important;
+  }
+  .el-form-item__label{
+    width: 130px!important;
+  }
+}
+</style>
