@@ -6,20 +6,20 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
 
-      <el-form-item label="前三位号段" prop="sectionNumber">
+      <el-form-item label="前三位号段" prop="number">
         <el-input
           :disabled="!isEditable"
-          v-model="dataForm.sectionNumber"
+          v-model="dataForm.number"
           placeholder="请输入号段"
-          maxlength="11"></el-input>
+          maxlength="3"></el-input>
       </el-form-item>
 
-      <el-form-item label="运营商" prop="provinceId">
-        <el-checkbox-group v-model="dataForm.sectionNumber">
-          <el-checkbox label="中国移动"></el-checkbox>
-          <el-checkbox label="中国联通"></el-checkbox>
-          <el-checkbox label="中国电信"></el-checkbox>
-        </el-checkbox-group>
+      <el-form-item label="运营商" prop="operatorCode">
+        <el-radio-group v-model="dataForm.operatorCode" @change="assa">
+          <el-radio v-model="dataForm.operatorCode" label="0">中国移动</el-radio>
+          <el-radio v-model="dataForm.operatorCode" label="1">中国联通</el-radio>
+          <el-radio v-model="dataForm.operatorCode" label="2">中国电信</el-radio>
+        </el-radio-group>
       </el-form-item>
     </el-form>
 
@@ -31,20 +31,12 @@
 </template>
 
 <script>
-  import { isNumberLib } from '@/utils/validate'
+  import { isThreeNumber } from '@/utils/validate'
   export default {
-    props: {
-      to_app_type: {
-        type: Array
-      },
-      to_province_type: {
-        type: Array
-      }
-    },
     data () {
       var validateNumber = (rule, value, callback) => {
-        if (!isNumberLib(value)) {
-          callback(new Error('号码段式不正确'))
+        if (!isThreeNumber(value)) {
+          callback(new Error('号段格式不正确'))
         } else {
           callback()
         }
@@ -57,24 +49,16 @@
         city_type: [],
         dataForm: {
           id: null,
-          sectionNumber: null,
-          provinceId: null,
-          regionCode: null,
-          appType: null
+          number: null,
+          operatorCode: null
         },
         dataRule: {
-          sectionNumber: [
-            { required: true, message: '号码段不能为空', trigger: 'blur' },
+          number: [
+            { required: true, message: '三位号段不能为空', trigger: 'blur' },
             { validator: validateNumber, trigger: 'blur' }
           ],
-          provinceId: [
-            { required: true, message: '省份不能为空', trigger: 'blur' },
-          ],
-          regionCode: [
-            { required: true, message: '市不能为空', trigger: 'blur' }
-          ],
-          appType: [
-            { required: true, message: 'app不能为空', trigger: 'blur' }
+          operatorCode: [
+            { required: true, message: '运营商不能为空', trigger: 'blur' }
           ]
         }
       }
@@ -84,61 +68,40 @@
     mounted () {
     },
     methods: {
+      assa(){
+        console.log(this.dataForm.operatorCode);
+      },
       init (row) {
         this.dataForm.id = null
-        row && (this.dataForm.id = row.regionCode)
+        row && (this.dataForm.id = row.operatorCode)
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
           if (row) {
             this.isEditable = false
-            this.get_city_type(row.regionEntity.provinceId)
-            this.dataForm.sectionNumber = row.sectionNumber
-            this.dataForm.provinceId = row.regionEntity.provinceId
-            this.dataForm.regionCode = row.regionCode
-            this.dataForm.appType = row.appType
+            this.dataForm.number = row.number
+            this.dataForm.operatorCode = row.operatorCode.toString()
+            console.log(this.dataForm);
           }else {
             this.isEditable = true
-            this.dataForm.sectionNumber = null
-            this.dataForm.provinceId = null
-            this.dataForm.regionCode = null
-            this.dataForm.appType = null
+            this.dataForm.number = null
+            this.dataForm.operatorCode = null
           }
         })
 
-      },
-      changeProvince (value) {
-        this.get_city_type(value)
-        this.dataForm.regionCode = null
-      },
-      // 获取市
-      get_city_type (province) {
-        var params = new FormData();
-        params.append('provinceId', province);//上传的文件： 键名，键值
-        this.$http({
-          url: this.$http.adornUrl(`/manager/region/queryByProvinceId?provinceId=${province}`),
-          method: 'get',
-          data: this.$http.adornParams()
-        }).then(({data}) => {
-          this.city_type = data.data
-        })
-        .catch(() => {
-        })
       },
       // 表单提交
       dataFormSubmit () {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-
             this.on_submit_loading = true
+            console.log(this.dataForm)
             this.$http({
-              url: this.$http.adornUrl(`/manager/sectionNumber/${!this.dataForm.id ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/manager/operatornumber/${this.dataForm.id == null ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'sectionNumber': this.dataForm.sectionNumber,
-                'provinceId': this.dataForm.provinceId,
-                'regionCode': this.dataForm.regionCode,
-                'appType': this.dataForm.appType
+                'number': this.dataForm.number,
+                'operatorCode': this.dataForm.operatorCode
               })
             }).then(({data}) => {
               if (data && data.code === 0) {

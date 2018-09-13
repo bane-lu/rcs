@@ -111,3 +111,11 @@ export function compareTime (a, b, timeVal) {
 export function isNumberLib (s) {
   return /^([0-9])*$/.test(s)
 }
+
+/**
+ * 仅三位号码段
+ * @param {*} s
+ */
+export function isThreeNumber (s) {
+  return /^([0-9]){3}$/.test(s)
+}

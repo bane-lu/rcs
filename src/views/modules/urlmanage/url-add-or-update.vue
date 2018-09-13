@@ -100,7 +100,7 @@
       </el-form-item>
       <!--                          是否需要显示文案                               -->
       <el-form-item label="文案文字" prop="docContent" label-width="100px" v-if="dataForm.docFlag">
-        <el-input v-model="dataForm.docContent" placeholder="文案文字" maxlength="20"></el-input>
+        <el-input v-model="dataForm.docContent" placeholder="文案文字" maxlength="256"></el-input>
       </el-form-item>
       <el-form-item label="展示规则" prop="docRule" label-width="100px" v-if="dataForm.docFlag">
         <el-radio-group v-model="dataForm.docRule">

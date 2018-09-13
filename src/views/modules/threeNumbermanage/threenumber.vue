@@ -22,33 +22,30 @@
         width="100">
       </el-table-column>
       <el-table-column
-        prop="sectionNumber"
+        prop="number"
         header-align="center"
         align="center"
         width="170"
         label="前三位号段">
       </el-table-column>
       <el-table-column
-        prop="regionEntity"
+        prop="operatorCode"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
         width="250"
         label="运营商">
         <template slot-scope="props">
-          <span v-text="props.row.regionEntity.provinceEntity.provinceName == null ? '---' : props.row.regionEntity.provinceEntity.provinceName"></span>
+          <span v-text="props.row.operatorCode == 0 ? '中国移动' : (props.row.operatorCode == 1 ? '中国联通' : '中国电信')"></span>
         </template>
       </el-table-column>
       <el-table-column
-        prop="regionEntity"
+        prop="createTime"
         header-align="center"
         align="center"
         :show-overflow-tooltip="true"
         label="创建时间"
         width="300">
-        <template slot-scope="props">
-          <span v-text="props.row.regionEntity.regionName == null ? '---' : props.row.regionEntity.regionName"></span>
-        </template>
       </el-table-column>
       <el-table-column
         prop="regionCode"
@@ -96,8 +93,6 @@
       }
     },
     mounted(){
-      this.get_app_type()
-      this.get_province_type()
       this.getDataList()
     },
     methods:{
@@ -144,37 +139,20 @@
         .catch(() => {
         })
       },
-      reset () {
-        this.filter.sectionNumber = null
-        this.filter.provinceId = null
-        this.filter.regionCode = null
-        this.dataList = null
-        this.pageIndex = 1
-        this.pageSize = 8
-        this.totalPage = 0
-
-        this.dataListLoading = false
-        this.dataListSelections = []
-        this.addOrUpdateVisible = false
-
-        this.get_province_type()
-        this.getDataList()
-      },
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl(`/manager/sectionNumber/queryList/${this.pageIndex}/${this.pageSize}`),
+          url: this.$http.adornUrl('/manager/operatornumber/list'),
           method: 'post',
           data: this.$http.adornData({
-            'sectionNumber': this.filter.sectionNumber,
-            'provinceId': this.filter.provinceId,
-            'regionCode': this.filter.regionCode,
+            'page': this.pageIndex.toString(),
+            'limit': this.pageSize.toString()
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
-            this.dataList = data.data.sectionNumberList
-            this.totalPage = data.data.total
+            this.dataList = data.page.list
+            this.totalPage = data.page.totalPage
           } else {
             this.dataList = []
             this.totalPage = 0
@@ -190,8 +168,7 @@
         })
       },
       deleteHandle (row) {
-        var ids = row.sectionNumber
-        console.log(row.sectionNumber)
+        var ids = row.number
         this.$confirm(`确定对该条数据进行删除操作?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -201,10 +178,10 @@
             'sectionNumber': ids
           }
           this.$http({
-            url: this.$http.adornUrl('/manager/sectionNumber/delete'),
+            url: this.$http.adornUrl('/manager/operatornumber/delete'),
             method: 'post',
             data: this.$http.adornData({
-              'sectionNumber': ids
+              'number': ids
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
