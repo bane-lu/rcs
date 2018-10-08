@@ -45,6 +45,11 @@ export default {
                 if (data.code === 0) {
                     this.tableData = data.page.list
                     this.total = data.page.totalCount
+                } else {
+                    self.$message({
+                        type: 'error',
+                        message: data.msg
+                    });
                 }
                
             })

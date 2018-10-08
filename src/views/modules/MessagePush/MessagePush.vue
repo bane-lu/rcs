@@ -119,6 +119,11 @@ export default {
                             type: 'success',
                             message: '删除成功'
                         });
+                    }else {
+                        self.$message({
+                            type: 'error',
+                            message: data.msg
+                        });
                     }
                 })
                 .catch(() => {
@@ -145,6 +150,11 @@ export default {
                     self.$message({
                         type: 'success',
                         message: '终止成功'
+                    });
+                } else {
+                    self.$message({
+                        type: 'error',
+                        message: data.msg
                     });
                 }
             })
@@ -183,6 +193,11 @@ export default {
                 if (data.code === 0) {
                     self.messageData = data.page.list
                     self.total = data.page.totalCount
+                } else {
+                    self.$message({
+                        type: 'error',
+                        message: data.msg
+                    });
                 }
             })
             .catch(() => {
@@ -197,6 +212,9 @@ export default {
     },
     mounted () {
         this.getData()
+    },
+    deactivated() {
+        this.$destroy()
     }
 }
 </script>

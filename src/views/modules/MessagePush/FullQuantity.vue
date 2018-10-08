@@ -40,6 +40,7 @@
                     action="http://192.168.185.250:10006/web-manager/iospush/pushMessageConf/numberFileUpload"
                     :on-success="fileSuccess"
                     :headers="header"
+                    :limit = 1
                     :file-list="form.fileList"
                     :before-upload="beforeAvatarUpload">
                     <el-button slot="trigger" size="small">选取文件</el-button>
@@ -95,7 +96,6 @@ export default {
     methods: {
         /* 推送 */
         submitUpload () {
-            console.log(this.form)
             this.$refs['form'].validate((valid) => {
                 if (valid) {
                     this.$http({
@@ -112,7 +112,6 @@ export default {
                                 'numberTag' : this.form.numberTag,
                         })
                     }).then(({data}) => {
-                        console.log(data)
                         if (data.code === 0) {
                             this.$refs['form'].resetFields()
                             this.$router.replace({ name: 'MessagePush' })
@@ -167,7 +166,11 @@ export default {
                     type: 'success',
                     message: '文件上传成功'
                 });
-                this.show = false
+            } else {
+                 this.$message({
+                    type: 'error',
+                    message: data.msg
+                });
             }
         }
     }
