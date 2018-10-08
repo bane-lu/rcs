@@ -37,20 +37,16 @@
                 v-else>
                     <el-upload
                     class="upload-demo"
-                    accept=".csv"
                     action="http://192.168.185.250:10006/web-manager/iospush/pushMessageConf/numberFileUpload"
-                    multiple
+                    :on-success="fileSuccess"
                     :headers="header"
                     :file-list="form.fileList"
-                    :on-change="filesChange"
-                    :on-success="fileSuccess">
-                        <el-button slot="trigger" size="small">选取文件</el-button>
+                    :before-upload="beforeAvatarUpload">
+                    <el-button slot="trigger" size="small">选取文件</el-button>
                     </el-upload>
-
-                    <!-- <el-input type="file"></el-input> -->
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitUpload" :disabled="show">确认推送</el-button>
+                    <el-button type="primary" @click="submitUpload">确认推送</el-button>
                     <el-button @click="cancel">取消</el-button>
                 </el-form-item>
             </el-form>
@@ -68,7 +64,6 @@ export default {
                     return time.getTime() < Date.now() - 8.64e7
                 }
             },
-            show: true,
             form: {
                 title: '',
                 body: '',
@@ -81,7 +76,7 @@ export default {
             header: {
                 'token' : Vue.cookie.get('token')
             },
-           rules: {
+            rules: {
                 title: [
                     { required: true, message: '请输入标题', trigger: 'blur' },
                 ],
@@ -117,9 +112,16 @@ export default {
                                 'numberTag' : this.form.numberTag,
                         })
                     }).then(({data}) => {
+                        console.log(data)
                         if (data.code === 0) {
                             this.$refs['form'].resetFields()
                             this.$router.replace({ name: 'MessagePush' })
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: data.msg
+                            })
+                            return false
                         }
                     })
                     .catch(() => {
@@ -148,8 +150,13 @@ export default {
             });
         },
 
-        filesChange () {
-            this.show = false
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'application/vnd.ms-excel';
+
+            if (!isJPG) {
+            this.$message.error('上传文件只能是 csv 格式!');
+            }
+            return isJPG
         },
 
         /* 上传成功 */
@@ -160,7 +167,7 @@ export default {
                     type: 'success',
                     message: '文件上传成功'
                 });
-                this.show = true
+                this.show = false
             }
         }
     }
