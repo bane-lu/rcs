@@ -35,6 +35,10 @@ const mainRoutes = {
     { path: '/theme', component: _import('common/theme'), name: 'theme', meta: { title: '主题' } },
     { path: '/versionmanage', component: _import('modules/versionmanage/versionmanage'), name: 'versionmanage', meta: { title: '版本管理' } },
     { path: '/urlmanage', component: _import('modules/urlmanage/urlmanage'), name: 'urlmanage', meta: { title: 'url管理' } },
+    { path: '/messagePush', component: _import('modules/MessagePush/MessagePush'), name: 'MessagePush', meta: { title: '消息推送' }},
+    { path: '/fullQuantity', component: _import('modules/MessagePush/FullQuantity'), name: 'FullQuantity', meta: { title: '全量' }},
+    { path: '/statistics', component: _import('modules/MessagePush/Statistics'), name: 'Statistics', meta: { title: '统计详情及分析' }},
+    { path: '/failDetail', component: _import('modules/MessagePush/failDetail'), name: 'FailDetail', meta: { title: '失败详情' }},
     {
       path: '/demo-01',
       component: null, // 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!
@@ -79,14 +83,14 @@ router.beforeEach((to, from, next) => {
         //   icon: 'log',
         //   list: [],
         //   menuId: 10,
-        //   name: '版本管理',
+        //   name: '消息推送',
         //   open: null,
         //   orderNum: 0,
         //   parentId: 0,
         //   parentName: null,
         //   perms: null,
         //   type: 0,
-        //   url: 'versionmanage/versionmanage'
+        //   url: 'MessagePush/MessagePush'
         // }
         // var urlMenu = {
         //   icon: 'log',
