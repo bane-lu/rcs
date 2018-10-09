@@ -39,6 +39,7 @@ export default {
                 method: 'post',
                 data: this.$http.adornData({
                     'messageId': messageId,
+                    'limit' : '10',
                     'page': this.page
                 })
             }).then(({data}) => {
