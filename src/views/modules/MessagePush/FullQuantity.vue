@@ -113,8 +113,8 @@ export default {
                         })
                     }).then(({data}) => {
                         if (data.code === 0) {
-                            this.$refs['form'].resetFields()
                             this.$router.replace({ name: 'MessagePush' })
+                            this.$refs['form'].resetFields()
                         } else {
                             this.$message({
                                 type: 'error',
@@ -141,9 +141,8 @@ export default {
                 center: true
             })
             .then(() => {
-                this.$refs['form'].resetFields()
                 this.$router.replace({ name: 'MessagePush' })
-
+                this.$refs['form'].resetFields()
             })
             .catch(action => {
             });

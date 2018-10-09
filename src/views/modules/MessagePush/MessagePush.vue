@@ -175,7 +175,7 @@ export default {
         statistics (id) {
             this.$router.push({ 
                 name: 'Statistics',
-                params: { id: id } 
+                params: { 'id': id } 
             })
         },
 

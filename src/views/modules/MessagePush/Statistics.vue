@@ -38,6 +38,7 @@ export default {
     methods: {
         getIdData () {
             let id = this.$route.params.id
+            console.log(id)
             this.$http({
                 url: this.$http.adornUrl('/iospush/pushDetail/info/'+ id),
                 method: 'get',
