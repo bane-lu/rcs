@@ -22,7 +22,7 @@
             </el-form-item>
             <el-form-item label="失败数：">
                 <span>{{data.pushFail}}</span>
-                <el-button v-if="data.pushStatus === '发送中' || data.pushStatus === '完成'" type="text" style="margin-left: 20px;" @click="failDetail()">查看失败详情</el-button>
+                <el-button v-if="data.pushStatus !== '待推送'" type="text" style="margin-left: 20px;" @click="failDetail()">查看失败详情</el-button>
             </el-form-item>
         </el-form>
     </div>
