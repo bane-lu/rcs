@@ -41,6 +41,7 @@
                     :on-success="fileSuccess"
                     :headers="header"
                     ref="upload"
+                    :on-remove="fileRemove"
                     :limit = 1
                     :file-list="form.fileList"
                     :before-upload="beforeAvatarUpload">
@@ -123,6 +124,7 @@ export default {
                     }).then(({data}) => {
                         if (data.code === 0) {
                             this.$router.replace({ name: 'MessagePush' })
+                            this.showDialog = false
                             this.$refs.upload.clearFiles()
                             this.$refs['form'].resetFields()
                             
@@ -185,6 +187,10 @@ export default {
                     message: data.msg
                 });
             }
+        },
+        // 取消文件
+        fileRemove () {
+            this.showDialog = false
         }
     }
 }
