@@ -45,7 +45,12 @@
                     :file-list="form.fileList"
                     :before-upload="beforeAvatarUpload">
                     <el-button slot="trigger" size="small">选取文件</el-button>
+                    <div v-show="showDialog" style="float: right">
+                        <span>有效号码：{{validNums}}</span>
+                        <span style="color: red; margin-left: 15px;">无效号码：{{invalidNums}}</span>
+                    </div>
                     </el-upload>
+                    
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitUpload">确认推送</el-button>
@@ -75,6 +80,9 @@ export default {
                 fileList: [],
                 numberTag: ''
             },
+            invalidNums: 0,
+            validNums: 0,
+            showDialog: false,
             header: {
                 'token' : Vue.cookie.get('token')
             },
@@ -164,6 +172,9 @@ export default {
         fileSuccess (data) {  
             if (data.code === 0) {
                 this.form.numberTag = data.numberTag
+                this.validNums = data.validNums
+                this.invalidNums = data.invalidNums
+                this.showDialog = true
                 this.$message({
                     type: 'success',
                     message: '文件上传成功'

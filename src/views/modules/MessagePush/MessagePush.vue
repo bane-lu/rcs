@@ -74,7 +74,7 @@
                    <el-button
                     size="small"
                     type="primary"
-                    :disabled="scope.row.pushStatus === 3"
+                    :disabled="scope.row.pushStatus === 3 || scope.row.pushStatus === 2"
                     @click="submite(scope.$index, messageData,scope.row.id)">终止</el-button>
                 </template>
              </el-table-column>
