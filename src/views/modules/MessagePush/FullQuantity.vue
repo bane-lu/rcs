@@ -40,6 +40,7 @@
                     action="http://192.168.185.250:10006/web-manager/iospush/pushMessageConf/numberFileUpload"
                     :on-success="fileSuccess"
                     :headers="header"
+                    ref="upload"
                     :limit = 1
                     :file-list="form.fileList"
                     :before-upload="beforeAvatarUpload">
@@ -114,7 +115,9 @@ export default {
                     }).then(({data}) => {
                         if (data.code === 0) {
                             this.$router.replace({ name: 'MessagePush' })
+                            this.$refs.upload.clearFiles()
                             this.$refs['form'].resetFields()
+                            
                         } else {
                             this.$message({
                                 type: 'error',
