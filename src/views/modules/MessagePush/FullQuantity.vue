@@ -123,9 +123,9 @@ export default {
                         })
                     }).then(({data}) => {
                         if (data.code === 0) {
+                            this.form.fileList = []
                             this.$router.replace({ name: 'MessagePush' })
                             this.showDialog = false
-                            this.$refs.upload.clearFiles()
                             this.$refs['form'].resetFields()
                             
                         } else {
