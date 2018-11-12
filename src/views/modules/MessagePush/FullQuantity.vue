@@ -37,7 +37,7 @@
                 v-else>
                     <el-upload
                     class="upload-demo"
-                    action="http://192.168.185.250:10006/web-manager/iospush/pushMessageConf/numberFileUpload"
+                    action="http://192.168.203.250:10006/web-manager/iospush/pushMessageConf/numberFileUpload"
                     :on-success="fileSuccess"
                     :headers="header"
                     ref="upload"
