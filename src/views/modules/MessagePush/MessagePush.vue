@@ -46,11 +46,12 @@
             </el-table-column>
             <el-table-column
             prop="pushType" 
-            label="推送机制"
+            label="推送范围"
             show-overflow-tooltip>
             <template slot-scope="scope">
-                <span  v-if="scope.row.pushType === 0">全量</span>
-                <span  v-else>指定号码</span>
+                <!--<span  v-if="scope.row.pushType === 0">全量</span>
+                <span  v-else>指定号码</span>-->
+                <span>{{scope.row.province}}</span>    
             </template>
             </el-table-column>
              <el-table-column 
