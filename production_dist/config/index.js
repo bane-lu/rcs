@@ -13,10 +13,9 @@
   // window.SITE_CONFIG['basePath'] = 'http://221.176.34.113:8761';
 
   // 生产
-  window.SITE_CONFIG['basePath'] = 'http://117.136.240.58:8080';
-
+  window.SITE_CONFIG['basePath'] =  'http://117.136.240.58:8080';
   // api接口请求地址
-  window.SITE_CONFIG['baseUrl'] = window.SITE_CONFIG['basePath'] + '/webmanager';
+  window.SITE_CONFIG['baseUrl'] = window.SITE_CONFIG['basePath'] + '/web-manager';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain']  = './'; // 域名

@@ -29,7 +29,7 @@
             show-overflow-tooltip>
             </el-table-column>
              <el-table-column
-            prop="createTime"
+            prop="pushStartDate"
             label="推送日期"
             show-overflow-tooltip>
             </el-table-column>
