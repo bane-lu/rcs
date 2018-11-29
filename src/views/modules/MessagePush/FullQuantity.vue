@@ -112,7 +112,8 @@ export default {
                         })
                     }).then(({ data }) => {
                         if (data.code === 0) {
-                            this.form.fileList = []
+                            this.form.fileList = [];
+                            this.form.rangeVal = "";
                             this.$router.replace({ name: 'MessagePush' })
                             this.showDialog = false
                             this.$refs['form'].resetFields()
@@ -143,6 +144,7 @@ export default {
                 center: true
             })
                 .then(() => {
+                    this.form.rangeVal = "";
                     this.$router.replace({ name: 'MessagePush' })
                     this.$refs['form'].resetFields()
                 })
