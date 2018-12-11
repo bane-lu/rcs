@@ -28,26 +28,32 @@
           maxlength="20">
           </el-input>
       </el-form-item>
-        <el-form-item label="有效期时间" prop="minTime" label-width="96px" style="display:block;float: left;width:320px;"> 
-          <el-date-picker
-             v-model="dataForm.minTime"
-             type="date"
-             value-format="yyyy-MM-dd"
-             placeholder="开始时间"
-             :editable = "isEditable"
-             @change="transformTime">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="-" prop="maxTime" label-width="56px" style="display:block;float: left;width:280px;">
-          <el-date-picker
-             v-model="dataForm.maxTime"
-             type="date"
-             value-format="yyyy-MM-dd"
-             placeholder="结束时间"
-             :editable = "isEditable"
-             @change="transformTime">
-          </el-date-picker>
-        </el-form-item>
+      <el-row :gutter="12">
+        <el-col :span="12"><div class="grid-content">
+          <el-form-item label="有效期时间" prop="minTime"> 
+            <el-date-picker
+               v-model="dataForm.minTime"
+               type="date"
+               value-format="yyyy-MM-dd"
+               placeholder="开始时间"
+               :editable = "isEditable"
+               @change="transformTime">
+            </el-date-picker>
+          </el-form-item>
+          </div></el-col>
+          <el-col :span="12"><div class="grid-content">
+          <el-form-item label="-" prop="maxTime">
+            <el-date-picker
+               v-model="dataForm.maxTime"
+               type="date"
+               value-format="yyyy-MM-dd"
+               placeholder="结束时间"
+               :editable = "isEditable"
+               @change="transformTime">
+            </el-date-picker>
+          </el-form-item>
+        </div></el-col>
+      </el-row>
     </el-form>
 
     <span slot="footer" class="dialog-footer">
