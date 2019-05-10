@@ -37,8 +37,9 @@ const mainRoutes = {
     { path: '/urlmanage', component: _import('modules/urlmanage/urlmanage'), name: 'urlmanage', meta: { title: 'url管理' } },
     { path: '/messagePush', component: _import('modules/MessagePush/MessagePush'), name: 'MessagePush', meta: { title: '消息推送' }},
     { path: '/fullQuantity', component: _import('modules/MessagePush/FullQuantity'), name: 'FullQuantity', meta: { title: '全量' }},
-    { path: '/statistics/:id', component: _import('modules/MessagePush/Statistics'), name: 'Statistics', meta: { title: '统计详情及分析' }},
-    { path: '/failDetail', component: _import('modules/MessagePush/failDetail'), name: 'FailDetail', meta: { title: '失败详情' }},
+    { path: '/statistics/:id/:system', component: _import('modules/MessagePush/Statistics'), name: 'Statistics', meta: { title: '统计详情及分析' }},
+    { path: '/failDetail/:id', component: _import('modules/MessagePush/failDetail'), name: 'FailDetail', meta: { title: '失败详情' }},
+    { path: '/addOrUpdate', component: _import('modules/webFamily/addOrUpdate'), name: 'addOrUpdate', meta: { title: '新增或修改' } },    
     {
       path: '/demo-01',
       component: null, // 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!

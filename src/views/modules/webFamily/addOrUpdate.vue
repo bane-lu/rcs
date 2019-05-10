@@ -1,58 +1,53 @@
 <template>
     <div id="fullQuantity">
-        <p> 新建消息推送</p>
+        <p> 新增url</p>
         <div class="formContent">
             <el-form ref="form" :model="form" label-width="80px" :rules="rules">
-                <el-form-item label="主标题" prop="title">
+                <el-form-item label="业务名称" prop="title">
                     <el-input v-model="form.title" maxlength="20"></el-input>
                 </el-form-item>
-                <el-form-item label="内容" prop="body">
+                <el-form-item label="模块" prop="body">
                     <el-input type="textarea" v-model="form.body" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="URL" prop="url">
                     <el-input v-model="form.url"></el-input>
                 </el-form-item>
-                <!--<el-form-item label="推送机制">
-                    <el-radio-group v-model="form.pushType">
-                        <el-radio label="0">全量</el-radio>
-                        <el-radio label="1">指定号码</el-radio>
-                    </el-radio-group>
-                </el-form-item>-->
-                <el-form-item label="范围选择" prop="rangeVal">
+                
+                <!--<el-form-item label="范围选择">
                     <el-select v-model="form.rangeVal" placeholder="请选择活动范围">
-                        <el-option v-for="item in range" :label="item.provinceName" :value="item.provinceName"  :key="item.provinceId"></el-option>
+                        <el-option v-for="item in range" :label="item.provinceName" :value="item.provinceName" :key="item.provinceId"></el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="推送机制" prop="pushType">
-                    <el-radio-group v-model="form.pushType">
-                        <el-radio label="0">立即推送</el-radio>
-                        <el-radio label="1">定时推送</el-radio>        
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="推送系统" prop="pushSystem" v-if="form.rangeVal !== '指定号码'">
-                    <el-checkbox-group v-model="form.pushSystem">
-                        <el-checkbox label="ios" name="type">Ios</el-checkbox>
-                        <el-checkbox label="android" name="type">Android</el-checkbox>
-                    </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="推送系统" prop="push_system" v-else>
-                    <el-radio-group v-model="form.push_system">
-                        <el-radio label="ios">Ios</el-radio>
-                        <el-radio label="android">Android</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="时间参数" v-if="form.rangeVal !== '指定号码'" prop="date">
-                    <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="form.date" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"  :picker-options="pickerBeginDateBefore">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="导入号码" v-else>
-                    <el-upload class="upload-demo" :action="a" :on-success="fileSuccess" :headers="header" ref="upload" :on-remove="fileRemove" :limit=1 :file-list="form.fileList" :before-upload="beforeAvatarUpload">
+                </el-form-item>-->
+                
+                <el-form-item label="icon上传" prop="fileList">
+                    <!--<el-upload class="upload-demo" :action="a" :on-success="fileSuccess" :headers="header" ref="upload" :on-remove="fileRemove" :limit=1 :file-list="form.fileList" :before-upload="beforeAvatarUpload">
                         <el-button slot="trigger" size="small">选取文件</el-button>
                         <div v-show="showDialog" style="float: right">
                             <span>有效号码：{{validNums}}</span>
                             <span style="color: red; margin-left: 15px;">无效号码：{{invalidNums}}</span>
                         </div>
+                    </el-upload>-->
+                    <el-upload
+                    class="upload-demo"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :limit='1'
+                    :file-list="form.fileList"
+                    list-type="picture"
+                    >
+                    <el-button size="small" type="primary">选择icon</el-button>
+                    <span>(尺寸1x 44*44px)</span>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                     </el-upload>
+                </el-form-item>
+                <el-form-item label="有效时间" prop="date">
+                    <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="form.date" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerBeginDateBefore">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="权限">
+                    <el-radio-group v-model="form.pushType">
+                        <el-radio label="0">需要统一认证</el-radio>
+                        <el-radio label="1">不需要统一认证</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitUpload">确认推送</el-button>
@@ -80,11 +75,9 @@ export default {
                 url: '',
                 pushType: '0',
                 date: '',
-                fileList: [],
+                fileList: "",
                 numberTag: '',
-                rangeVal: '',
-                pushSystem: [],
-                push_system: "ios"
+                rangeVal: ''
             },
             range: [],
             invalidNums: 0,
@@ -95,45 +88,29 @@ export default {
             },
             rules: {
                 title: [
-                    { required: true, message: '请输入标题', trigger: 'blur' },
+                    { required: true, message: '名称不能为空', trigger: 'blur' },
                 ],
                 body: [
-                    { required: true, message: '请输入内容', trigger: 'blur' }
+                    { required: true, message: '模块不能为空', trigger: 'blur' }
                 ],
                 url: [
-                    { required: false, message: '请输入url', trigger: 'blur' }
+                    { required: true, message: 'url不能为空', trigger: 'blur' }
                 ],
-                rangeVal: [
-                    { required: true, message: '请选择活动范围', trigger: 'change' }
+                icon: [
+                    { required: true, message: '未上传图片', trigger: 'blur' }
                 ],
                 date: [
-                    { required: true, message: '请选择时间', trigger: 'blur' }
-                ],
-                pushType: [
-                    { required: true, message: '请选择推送机制', trigger: 'change'}
-                ],
-                pushSystem: [
-                    { type: 'array', required: true, message: '请至少选择一种推送系统', trigger: 'change' }
-                ],
-                push_system: [
-                    { required: true, message: '请选择推送系统', trigger: 'change' }
+                    { required: true, message: '有效时间不能为空', trigger: 'blur' }
                 ]
             }
-        }
-    },
-    watch: {
-        'form.push_system'(newValue){
-            this.a = newValue == 'ios' ?  window.SITE_CONFIG['basePath'] + "/web-manager/iospush/pushMessageConf/numberFileUpload" :  window.SITE_CONFIG['basePath'] + "/web-manager/iospush/pushMessageConf/androidNumberFileUpload";
-            console.log(this.a)
         }
     },
     methods: {
         /* 推送 */
         submitUpload() {
             this.$refs['form'].validate((valid) => {
-                if (valid) {              
-                    console.log(1);   
-                    let system = this.form.rangeVal !== '指定号码' ? this.form.pushSystem.length > 1 ? this.form.pushSystem[0] + ',' + this.form.pushSystem[1] : this.form.pushSystem[0] : this.form.push_system; 
+                if (valid) {
+                    console.log(1);
                     this.$http({
                         contentType: 'application/json',
                         url: this.$http.adornUrl('/iospush/pushMessageConf/createPushMessageConf'),
@@ -142,12 +119,11 @@ export default {
                             'title': this.form.title,
                             'body': this.form.body,
                             'url': this.form.url,
-                            'pushTime': this.form.pushType,
+                            'pushType': this.form.pushType,
                             'pushStartDate': this.form.date[0],
                             'pushEndDate': this.form.date[1],
                             'numberTag': this.form.numberTag,
-                            'province': this.form.rangeVal,
-                            'system': system
+                            'province': this.form.rangeVal
                         })
                     }).then(({ data }) => {
                         if (data.code === 0) {

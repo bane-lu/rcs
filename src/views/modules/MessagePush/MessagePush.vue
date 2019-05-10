@@ -1,6 +1,16 @@
 <template>
     <div>
-        <el-button type="primary" @click="fullQuantity">消息推送</el-button>
+        <el-form :inline="true"  class="demo-form-inline">
+            <el-form-item label="">
+                <el-input v-model="condition"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="check">查询</el-button>
+            </el-form-item>
+             <el-form-item>
+                <el-button type="primary" @click="fullQuantity">消息推送</el-button>
+            </el-form-item>
+        </el-form>
         <el-table
             border
             ref="multipleTable"
@@ -34,6 +44,11 @@
             show-overflow-tooltip>
             </el-table-column>
             <el-table-column
+            prop="system"
+            label="推送系统"
+            show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
             prop="pushStatus" 
             label="状态"
             show-overflow-tooltip>
@@ -60,7 +75,7 @@
                     <el-button
                     size="small"
                     type="text"
-                    @click="statistics(scope.row.id)"
+                    @click="statistics(scope.row.id,scope.row.system)"
                    >详情分析</el-button>
                     <el-button
                     size="small"
@@ -92,9 +107,11 @@
 export default {
     data () {
         return {    
+            condition: "",
             messageData: null,                                                                                                                                                                                                                                                                                                                              
             page: '1',
-            total: 1
+            total: 1,
+            text: ""
         }
     },
     methods: {
@@ -166,17 +183,37 @@ export default {
                 });
             }) 
         },
-
+        /*点击查询*/
+        check(){
+            let self = this;
+            console.log(this.condition);
+            this.$http({
+                url: this.$http.adornUrl('/iospush/pushMessageConf/list'),
+                method: "post",
+                data: this.$http.adornData({
+                    'limit': '10',
+                    'page': self.page,
+                    'condition': self.condition
+                })
+            }).then(({data}) => {
+                console.log(data);
+                self.messageData = data.page.list
+                self.total = data.page.totalCount
+            })
+        },
         /* 新建全量 */
         fullQuantity () {
             this.$router.push({ name: 'FullQuantity' })
         },
 
         /* 详情 */
-        statistics (id) {
+        statistics (id,system) {
             this.$router.push({ 
                 name: 'Statistics',
-                params: { 'id': id } 
+                params: { 
+                     id,
+                    system
+                 } 
             })
         },
 
@@ -188,7 +225,7 @@ export default {
                 method: 'post',
                 data: this.$http.adornData({
                         'limit': '10',
-                        'page' :  self.page  
+                        'page' :  self.page
                 })
             }).then(({data}) => {
                 if (data.code === 0) {
@@ -208,7 +245,12 @@ export default {
         /* 分页 */
         setPage(val) {
            this.page = '' + val
-           this.getData()
+           if(this.condition){
+              this.check()
+           }else{
+               this.getData()
+           }
+           
         }
     },
     mounted () {
