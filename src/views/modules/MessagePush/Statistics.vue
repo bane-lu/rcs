@@ -24,7 +24,7 @@
         <div>
             <p class="push-title"> 推送数据</p>
             <el-button v-if="data.pushStatus !== '待推送'" type="text" style="margin-left: 20px;" @click="failDetail()">查看失败详情</el-button>
-            <el-button type="primary" class="export-btn">导出</el-button>
+            <el-button type="primary" class="export-btn" @click="exportAll">导出</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -179,11 +179,16 @@ export default {
                 })
             
 
+        },
+        //导出
+        exportAll(){
+            window.location.href = this.$http.adornUrl("/iospush/pushDetail/infoDownload/" + this.id);
         }
     },
     mounted () {
         this.id = this.$route.params.id;
         this.system = this.$route.params.system;
+        
         this.getIdData()
         // console.log(this.$route.params.system);
         // this.data = {
