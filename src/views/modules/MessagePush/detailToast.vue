@@ -8,7 +8,7 @@
                     <span v-if="dataDetail.index==2">{{item.appVersion}}:</span>
                     <span v-if="dataDetail.index==3">{{item.province}}:</span>
                     <span>{{item.total}}</span>
-                    <span>{{item.arrive}}</span>
+                    <span>{{item.click}}</span>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">

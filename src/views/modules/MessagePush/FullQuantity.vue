@@ -41,11 +41,11 @@
                         <el-radio label="android">Android</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="时间参数" v-if="form.rangeVal !== '指定号码'" prop="date">
+                <el-form-item label="时间参数" prop="date" v-show="form.pushType==1">
                     <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="form.date" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"  :picker-options="pickerBeginDateBefore">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="导入号码" v-else>
+                <el-form-item label="导入号码"  v-if="form.rangeVal == '指定号码'">
                     <el-upload class="upload-demo" :action="a" :on-success="fileSuccess" :headers="header" ref="upload" :on-remove="fileRemove" :limit=1 :file-list="form.fileList" :before-upload="beforeAvatarUpload">
                         <el-button slot="trigger" size="small">选取文件</el-button>
                         <div v-show="showDialog" style="float: right">
@@ -124,7 +124,6 @@ export default {
     watch: {
         'form.push_system'(newValue){
             this.a = newValue == 'ios' ?  window.SITE_CONFIG['basePath'] + "/web-manager/iospush/pushMessageConf/numberFileUpload" :  window.SITE_CONFIG['basePath'] + "/web-manager/iospush/pushMessageConf/androidNumberFileUpload";
-            console.log(this.a)
         }
     },
     methods: {
