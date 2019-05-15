@@ -41,7 +41,7 @@
                         <el-radio label="android">Android</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="时间参数" prop="date" v-show="form.pushType==1">
+                <el-form-item label="时间参数" prop="date" v-if="form.pushType==1">
                     <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="form.date" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"  :picker-options="pickerBeginDateBefore">
                     </el-date-picker>
                 </el-form-item>
