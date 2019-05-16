@@ -183,24 +183,29 @@ export default {
         //导出
         exportAll(){
             window.location.href = this.$http.adornUrl("/iospush/pushDetail/infoDownload/" + this.id);
+        },
+        init(){
+            this.id = this.$route.params.id;
+            this.system = this.$route.params.system;
+            this.getIdData()
         }
     },
-    mounted () {
-        this.id = this.$route.params.id;
-        this.system = this.$route.params.system;
-        
-        this.getIdData()
-        // console.log(this.$route.params.system);
-        // this.data = {
-        //     title: "哈哈",
-        //     contents: "哈哈",
-        //     pushDate: "哈哈",
-        //     pushStatus: "哈哈",
-        //     pushSuccess: "哈哈",
-        //     pushSuccess: "哈哈",
-        //     pushFail: "哈哈"
-        // }
-    },
+    // mounted () {
+    //     this.init();
+    //     // console.log(this.$route.params.system);
+    //     // this.data = {
+    //     //     title: "哈哈",
+    //     //     contents: "哈哈",
+    //     //     pushDate: "哈哈",
+    //     //     pushStatus: "哈哈",
+    //     //     pushSuccess: "哈哈",
+    //     //     pushSuccess: "哈哈",
+    //     //     pushFail: "哈哈"
+    //     // }
+    // },
+    activated(){
+        this.init();
+    }, 
     components: {
         detailToast
     }
