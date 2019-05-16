@@ -204,6 +204,7 @@ export default {
     //     // }
     // },
     activated(){
+        console.log(11);
         this.init();
     }, 
     components: {
