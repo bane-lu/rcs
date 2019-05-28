@@ -40,6 +40,9 @@ const mainRoutes = {
     { path: '/statistics/:id/:system', component: _import('modules/MessagePush/Statistics'), name: 'Statistics', meta: { title: '统计详情及分析' }},
     { path: '/failDetail/:id', component: _import('modules/MessagePush/failDetail'), name: 'FailDetail', meta: { title: '失败详情' }},
     { path: '/addOrUpdate', component: _import('modules/webFamily/addOrUpdate'), name: 'addOrUpdate', meta: { title: '新增或修改' } },    
+    { path: '/HefeixinFullQuantity', component: _import('modules/HefeixinMessagePush/HefeixinFullQuantity'), name: 'HefeixinFullQuantity', meta: { title: '全量' } },
+    { path: '/HefeixinStatistics/:id', component: _import('modules/HefeixinMessagePush/HefeixinStatistics'), name: 'HefeixinStatistics', meta: { title: '统计详情及分析' } },
+    { path: '/HeifeixinFailDetail/:id', component: _import('modules/HefeixinMessagePush/HefeixinFailDetail'), name: 'HefeixinFailDetail', meta: { title: '失败详情' } },
     {
       path: '/demo-01',
       component: null, // 如需要通过iframe嵌套展示内容, 但不通过tab打开, 请自行创建组件使用iframe处理!

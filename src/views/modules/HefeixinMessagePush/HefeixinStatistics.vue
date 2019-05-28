@@ -30,12 +30,12 @@
             :data="tableData"
             border
             style="width: 100%">
-            <el-table-column
+            <!--<el-table-column
             v-if="system!='ios'"
             prop="total"
             label="推送数"
             align="center">
-            </el-table-column>
+            </el-table-column>-->
             <el-table-column
             prop="arrive"
             label="到达数"
@@ -46,7 +46,7 @@
             label="失败数"
             align="center">
             </el-table-column>
-            <div v-if="system!='ios'">
+            <!--<div v-if="system!='ios'">
                 <el-table-column
                 prop="arriveRate"
                 label="到达率"
@@ -62,9 +62,9 @@
                 label="点击率"
                 align="center">
                 </el-table-column>
-            </div>
+            </div>-->
         </el-table>
-        <el-table
+        <!--<el-table
             v-if="system!='ios'"
             :data="tableData2"
             border
@@ -101,7 +101,7 @@
             </el-table-column>
             <el-table-column>
             </el-table-column>
-        </el-table>
+        </el-table>-->
         <detailToast :dataDetail="dataDetail"></detailToast>
     </div>
 </template>
@@ -116,7 +116,7 @@ export default {
             tableData2: [{}],
             dataDetail: {},
             id: "",
-            system: ""
+            // system: ""
         }
     },
     methods: {
@@ -144,7 +144,7 @@ export default {
 
         failDetail () {
             this.$router.push({ 
-                name: 'FailDetail' ,
+                name: 'HefeixinFailDetail' ,
                 params: { messageId: this.id } 
             })
         },
@@ -187,7 +187,7 @@ export default {
         },
         init(){
             this.id = this.$route.params.id;
-            this.system = this.$route.params.system;
+            // this.system = this.$route.params.system;
             this.getIdData()
         }
     },
