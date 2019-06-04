@@ -211,6 +211,8 @@ export default {
                     message: '文件上传成功'
                 });
             } else {
+                
+                     
                 this.$message({
                     type: 'error',
                     message: data.msg

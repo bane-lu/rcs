@@ -29,18 +29,18 @@
                         <el-radio label="1">定时推送</el-radio>        
                     </el-radio-group>
                 </el-form-item>
-                <!--<el-form-item label="推送系统" prop="pushSystem" v-if="form.rangeVal !== '指定号码'">
+                <!-- <el-form-item label="推送系统" prop="pushSystem" v-if="form.rangeVal !== '指定号码'">
                     <el-checkbox-group v-model="form.pushSystem">
                         <el-checkbox label="ios" name="type">Ios</el-checkbox>
                         <el-checkbox label="android" name="type">Android</el-checkbox>
                     </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="推送系统" prop="push_system" v-else>
+                </el-form-item> -->
+                <el-form-item label="推送系统" prop="push_system">
                     <el-radio-group v-model="form.push_system">
                         <el-radio label="ios">Ios</el-radio>
-                        <el-radio label="android">Android</el-radio>
+                        <!-- <el-radio label="android">Android</el-radio> -->
                     </el-radio-group>
-                </el-form-item>-->
+                </el-form-item>
                 <el-form-item label="时间参数" prop="date" v-if="form.pushType==1">
                     <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="form.date" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"  :picker-options="pickerBeginDateBefore">
                     </el-date-picker>
@@ -68,7 +68,7 @@ import Vue from 'vue'
 export default {
     data() {
         return {
-            a: window.SITE_CONFIG['basePath'] + "/web-manager/iospush/pushMessageConf/numberFileUpload",
+            a: window.SITE_CONFIG['basePath'] + "/web-manager/rcsiospush/pushMessageConf/numberFileUpload",
             pickerBeginDateBefore: {
                 disabledDate(time) {
                     return time.getTime() < Date.now() - 8.64e7
@@ -83,8 +83,8 @@ export default {
                 fileList: [],
                 numberTag: '',
                 rangeVal: '',
-                // pushSystem: [],
-                // push_system: "ios"
+                // pushSystem: "ios",
+                push_system: "ios"
             },
             range: [],
             invalidNums: 0,
@@ -132,10 +132,10 @@ export default {
             this.$refs['form'].validate((valid) => {
                 if (valid) {              
                     console.log(1);   
-                    // let system = this.form.rangeVal !== '指定号码' ? this.form.pushSystem.length > 1 ? this.form.pushSystem[0] + ',' + this.form.pushSystem[1] : this.form.pushSystem[0] : this.form.push_system; 
+                    let system = this.form.push_system
                     this.$http({
                         contentType: 'application/json',
-                        url: this.$http.adornUrl('/iospush/pushMessageConf/createPushMessageConf'),
+                        url: this.$http.adornUrl('/rcsiospush/pushMessageConf/createPushMessageConf'),
                         method: 'post',
                         data: this.$http.adornData({
                             'title': this.form.title,
@@ -146,7 +146,7 @@ export default {
                             'pushEndDate': this.form.date[1],
                             'numberTag': this.form.numberTag,
                             'province': this.form.rangeVal,
-                            // 'system': system
+                            'system': system
                         })
                     }).then(({ data }) => {
                         if (data.code === 0) {
@@ -228,7 +228,7 @@ export default {
         //请求活动范围
         this.$http({
             contentType: 'application/json',
-            url: this.$http.adornUrl('/iospush/pushMessageConf/getArea'),
+            url: this.$http.adornUrl('/rcsiospush/pushMessageConf/getArea'),
             method: 'get',
         }).then(({ data }) => {
             if (data.code === 0) {

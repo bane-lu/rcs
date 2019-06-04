@@ -43,11 +43,11 @@
             label="推送日期"
             show-overflow-tooltip>
             </el-table-column>
-            <!--<el-table-column
+            <el-table-column
             prop="system"
             label="推送系统"
             show-overflow-tooltip>
-            </el-table-column>-->
+            </el-table-column>
             <el-table-column
             prop="pushStatus" 
             label="状态"
@@ -127,7 +127,7 @@ export default {
             })
             .then(() => {
                 this.$http({
-                    url: this.$http.adornUrl('/iospush/pushMessageConf/deletePushMessageConf/' + id ),
+                    url: this.$http.adornUrl('/rcsiospush/pushMessageConf/deletePushMessageConf/' + id ),
                     method: 'get',
                     params: this.$http.adornParams()
                 }).then(({data}) => {
@@ -159,7 +159,7 @@ export default {
         submite (index, rows, id) {
             let self = this
             this.$http({
-                url: this.$http.adornUrl('/iospush/pushMessageConf/stopPushMessageConf/' + id ),
+                url: this.$http.adornUrl('/rcsiospush/pushMessageConf/stopPushMessageConf/' + id ),
                 method: 'get',
                 params: this.$http.adornParams()
             }).then(({data}) => {
@@ -186,9 +186,8 @@ export default {
         /*点击查询*/
         check(){
             let self = this;
-            console.log(this.condition);
             this.$http({
-                url: this.$http.adornUrl('/iospush/pushMessageConf/list'),
+                url: this.$http.adornUrl('/rcsiospush/pushMessageConf/list'),
                 method: "post",
                 data: this.$http.adornData({
                     'limit': '10',
@@ -196,9 +195,10 @@ export default {
                     'condition': self.condition
                 })
             }).then(({data}) => {
-                console.log(data);
+                 
                 self.messageData = data.page.list
                 self.total = data.page.totalCount
+                console.log(666, data.page.list,data.page.totalCount)
             })
         },
         /* 新建全量 */
@@ -218,9 +218,10 @@ export default {
 
         /* 获取数据 */
         getData() {
+             
             let self = this
             this.$http({
-                url: this.$http.adornUrl('/iospush/pushMessageConf/list'),
+                url: this.$http.adornUrl('/rcsiospush/pushMessageConf/list'),
                 method: 'post',
                 data: this.$http.adornData({
                         'limit': '10',

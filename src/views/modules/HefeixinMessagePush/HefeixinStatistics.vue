@@ -122,7 +122,7 @@ export default {
     methods: {
         getIdData () {
             this.$http({
-                url: this.$http.adornUrl('/iospush/pushDetail/info/'+ this.id),
+                url: this.$http.adornUrl('/rcsiospush/pushDetail/info/'+ this.id),
                 method: 'get',
                 params: this.$http.adornParams()
             }).then(({data}) => {
@@ -183,7 +183,7 @@ export default {
         },
         //导出
         exportAll(){
-            window.location.href = this.$http.adornUrl("/iospush/pushDetail/infoDownload/" + this.id);
+            window.location.href = this.$http.adornUrl("/rcsiospush/pushDetail/infoDownload/" + this.id);
         },
         init(){
             this.id = this.$route.params.id;

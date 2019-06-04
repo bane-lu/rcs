@@ -34,7 +34,7 @@ export default {
         failDetail() {
             let messageId = this.$route.params.id
             this.$http({
-                url: this.$http.adornUrl('/iospush/errorDetail/list'),
+                url: this.$http.adornUrl('/rcsiospush/errorDetail/list'),
                 method: 'post',
                 data: this.$http.adornData({
                     'messageId': messageId,
@@ -69,7 +69,7 @@ export default {
         checkRecord() {
             let messageId = this.$route.params.id
             this.$http({
-                url: this.$http.adornUrl('/iospush/errorDetail/list'),
+                url: this.$http.adornUrl('/rcsiospush/errorDetail/list'),
                 method: 'post',
                 data: this.$http.adornData({
                     'messageId': messageId,
